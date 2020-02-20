@@ -4,10 +4,9 @@ set encoding=utf-8
 
 let mapleader = " "
 
-set regexpengine=2
 set relativenumber
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-  syntax on
+	syntax on
 endif
 
 call plug#begin('~/.vim/plugged')
@@ -30,22 +29,28 @@ Plug 'tpope/vim-fugitive'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
+" Sets regex engine and solves Ruby type and navigation lagging:
+" https://stackoverflow.com/questions/16902317/vim-slow-with-ruby-syntax-highlighting
 set re=1
 
-" load powerline sympbols
+" Load powerline sympbols
 let g:airline_powerline_fonts = 1
 
 nnoremap <c-p> :Files<cr>
 nnoremap <Leader>s :w<cr>
-nnoremap <Leader>q  :E<cr>
+nnoremap <Leader>q  :q<cr>
+nnoremap <Leader>e  :E<cr>
 nnoremap <Leader>f  :Autoformat<cr>
 nmap <Leader>b :source ~/.vimrc<cr>
 nnoremap <Leader>c :bp\|bd #<CR>
 nnoremap <Leader>h :Ag! <C-R><C-W><cr>:cw<cr>
+nnoremap <Leader>\ :vsplit<cr>
 set redrawtime=10000
 
 set cursorline
 set updatetime=100
+
+au BufWrite * :Autoformat
 
 " COC
 " It is handle by coc, disable in vim-go
@@ -61,15 +66,15 @@ set signcolumn=yes
 " Use tab for trigger completion
 " It would jump snippet positions too, but use C-j instead - more reliable
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+			\ pumvisible() ? coc#_select_confirm() :
+			\ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+			\ <SID>check_back_space() ? "\<TAB>" :
+			\ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 
@@ -92,11 +97,11 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+	if (index(['vim','help'], &filetype) >= 0)
+		execute 'h '.expand('<cword>')
+	else
+		call CocAction('doHover')
+	endif
 endfunction
 
 " Highlight symbol under cursor on CursorHold
@@ -110,11 +115,11 @@ xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+	autocmd!
+	" Setup formatexpr specified filetype(s).
+	autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+	" Update signature help on jump placeholder
+	autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
