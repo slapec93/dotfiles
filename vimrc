@@ -63,10 +63,10 @@ set ruler
 set incsearch
 set invlist listchars=tab:>-,trail:·,nbsp:·,space:·
 hi SpecialKey ctermfg=239
-match WhiteSpaceMol / /
-2match WhiteSpaceBol /^ \+/
 hi WhiteSpaceBol ctermfg=239
 hi WhiteSpaceMol ctermfg=235
+match WhiteSpaceMol / /
+2match WhiteSpaceBol /^ \+/
 
 au BufWrite * :Autoformat
 au VimResized * :wincmd =
