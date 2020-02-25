@@ -51,8 +51,10 @@ nmap <Leader>b :source ~/.vimrc<cr>
 nnoremap <Leader>c :bp\|bd #<CR>
 nnoremap <Leader>h :Ag! <C-R><C-W><cr>:cw<cr>
 nnoremap <Leader>\ :vsplit<cr>
+nnoremap <Leader>g :G<cr>
 nnoremap <Leader>gp :Gpush<cr>
 nnoremap <Leader>gl :Gpull<cr>
+nnoremap <Leader>gc :Gcommit<cr>
 set redrawtime=10000
 
 set cursorline
