@@ -20,14 +20,20 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rake'
+Plug 'slim-template/vim-slim'
+Plug 'pangloss/vim-javascript'
+Plug 'cakebaker/scss-syntax.vim'
 if isdirectory("/usr/local/opt/fzf")
 	Plug '/usr/local/opt/fzf'
 else
 	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }'
 endif
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
+
+colorscheme codedark
 
 " Sets regex engine and solves Ruby type and navigation lagging:
 " https://stackoverflow.com/questions/16902317/vim-slow-with-ruby-syntax-highlighting
@@ -45,12 +51,40 @@ nmap <Leader>b :source ~/.vimrc<cr>
 nnoremap <Leader>c :bp\|bd #<CR>
 nnoremap <Leader>h :Ag! <C-R><C-W><cr>:cw<cr>
 nnoremap <Leader>\ :vsplit<cr>
+nnoremap <Leader>gp :Gpush<cr>
+nnoremap <Leader>gl :Gpull<cr>
 set redrawtime=10000
 
 set cursorline
 set updatetime=100
+set backspace=2
+set noswapfile
+set ruler
+set incsearch
+set invlist listchars=tab:>-,trail:·,nbsp:·,space:·
+hi SpecialKey ctermfg=239
+match WhiteSpaceMol / /
+2match WhiteSpaceBol /^ \+/
+hi WhiteSpaceBol ctermfg=239
+hi WhiteSpaceMol ctermfg=235
 
 au BufWrite * :Autoformat
+au VimResized * :wincmd =
+
+au BufEnter,BufRead *.js.erb set ft=javascript
+
+" Plugin Gitgutter
+let g:gitgutter_override_sign_column_highlight = 0
+hi SignColumn ctermbg=black
+hi GitGutterAdd ctermbg=28 ctermfg=15
+hi GitGutterChange ctermbg=blue ctermfg=232
+let g:gitgutter_sign_removed = '-'
+hi GitGutterDelete ctermbg=red
+hi GitGutterChangeDelete ctermbg=red
+au BufNewFile,BufRead *.slim set tabstop=2 noexpandtab
+
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
 
 " COC
 " It is handle by coc, disable in vim-go
@@ -105,7 +139,7 @@ function! s:show_documentation()
 endfunction
 
 " Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+au CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
@@ -171,4 +205,3 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 
 " COC END
 
-colorscheme codedark
