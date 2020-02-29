@@ -12,6 +12,9 @@ ZSH_THEME="agnoster"
 
 export GOPATH="/Users/gergelybekesi/go"
 export GOBIN="/Users/gergelybekesi/go/bin"
+export PATH=$PATH:$GOBIN
+
+alias gotest=$'fswatch -e ".*" -i "\\.go$" . | xargs -n1 -I {} sh -c "clear && printf \'\\e[3J\';gotestsum -f short-verbose"'
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/

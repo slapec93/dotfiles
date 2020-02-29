@@ -5,6 +5,7 @@ set encoding=utf-8
 let mapleader = " "
 
 set relativenumber
+set nu rnu
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
 	syntax on
 endif
@@ -39,6 +40,8 @@ colorscheme codedark
 " https://stackoverflow.com/questions/16902317/vim-slow-with-ruby-syntax-highlighting
 set re=1
 
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
+
 " Load powerline sympbols
 let g:airline_powerline_fonts = 1
 
@@ -55,6 +58,7 @@ nnoremap <Leader>g :G<cr>
 nnoremap <Leader>gp :Gpush<cr>
 nnoremap <Leader>gl :Gpull<cr>
 nnoremap <Leader>gc :Gcommit<cr>
+nnoremap <Leader>cc :cclose<cr>
 set redrawtime=10000
 
 set cursorline
@@ -63,17 +67,19 @@ set backspace=2
 set noswapfile
 set ruler
 set incsearch
+set modelines=0
+set nomodeline
+set mouse=a
 set invlist listchars=tab:>-,trail:·,nbsp:·,space:·
 hi SpecialKey ctermfg=239
-hi WhiteSpaceBol ctermfg=239
-hi WhiteSpaceMol ctermfg=235
-match WhiteSpaceMol / /
-2match WhiteSpaceBol /^ \+/
+"hi WhiteSpaceBol ctermfg=239
+"hi WhiteSpaceMol ctermfg=235
+"match WhiteSpaceMol / /
+"2match WhiteSpaceBol /^ \+/
 
 au BufWrite * :Autoformat
 au VimResized * :wincmd =
 
-au BufEnter,BufRead *.js.erb set ft=javascript
 
 " Plugin Gitgutter
 let g:gitgutter_override_sign_column_highlight = 0
@@ -83,10 +89,10 @@ hi GitGutterChange ctermbg=blue ctermfg=232
 let g:gitgutter_sign_removed = '-'
 hi GitGutterDelete ctermbg=red
 hi GitGutterChangeDelete ctermbg=red
+
 au BufNewFile,BufRead *.slim set tabstop=2 noexpandtab
 
-let g:autoformat_autoindent = 0
-let g:autoformat_retab = 0
+au BufEnter,BufRead *.js.erb set ft=javascript
 
 " COC
 " It is handle by coc, disable in vim-go
@@ -125,6 +131,7 @@ nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
