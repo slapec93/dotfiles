@@ -11,9 +11,9 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
 endif
 
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin('~/.vim/plugged')
@@ -22,6 +22,7 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'chiel92/vim-autoformat'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'junegunn/fzf', { 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-bundler'
@@ -30,11 +31,6 @@ Plug 'tpope/vim-rake'
 Plug 'slim-template/vim-slim'
 Plug 'pangloss/vim-javascript'
 Plug 'cakebaker/scss-syntax.vim'
-if isdirectory("/usr/local/opt/fzf")
-	Plug '/usr/local/opt/fzf'
-else
-	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }'
-endif
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -46,7 +42,7 @@ colorscheme codedark
 " https://stackoverflow.com/questions/16902317/vim-slow-with-ruby-syntax-highlighting
 set re=1
 
-let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
+" let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
 " Load powerline sympbols
 let g:airline_powerline_fonts = 1
