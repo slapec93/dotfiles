@@ -63,6 +63,14 @@ nnoremap <Leader>gc :Gcommit<cr>
 nnoremap <Leader>cc :cclose<cr>
 set redrawtime=10000
 
+" Line moving and duplication
+execute "set <A-j>=∆"
+nnoremap <A-j> :m .+1 <CR>==
+execute "set <A-k>=˚"
+nnoremap <A-k> :m .-2 <CR>==
+execute "set <S-A-j>=Ô"
+nnoremap <S-A-j> :t . <CR>==
+
 set cursorline
 set updatetime=100
 set backspace=2
@@ -95,6 +103,11 @@ hi GitGutterChangeDelete ctermbg=red
 au BufNewFile,BufRead *.slim set tabstop=2 noexpandtab
 
 au BufEnter,BufRead *.js.erb set ft=javascript
+
+let g:formatdef_rubocop = "'rubocop-daemon-wrapper --auto-correct -o /dev/null -s '.bufname('%').'\| sed -n 2,\\$p'"
+let g:formatters_ruby = ['rubocop']
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
 
 " COC
 " It is handle by coc, disable in vim-go
