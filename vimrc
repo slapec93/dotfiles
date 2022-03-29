@@ -5,12 +5,6 @@ set encoding=utf-8
 
 let mapleader = " "
 
-set relativenumber
-set nu rnu
-if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-	syntax on
-endif
-
 if empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -34,10 +28,23 @@ Plug 'pangloss/vim-javascript'
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+Plug 'thoughtbot/vim-rspec'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
+" VISUALS
 colorscheme codedark
+
+" Load powerline sympbols
+let g:airline_powerline_fonts = 1
+
+set relativenumber
+set nu rnu
+if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
+	syntax on
+endif
+
+" VISUALS END
 
 " Sets regex engine and solves Ruby type and navigation lagging:
 " https://stackoverflow.com/questions/16902317/vim-slow-with-ruby-syntax-highlighting
@@ -45,13 +52,10 @@ set re=1
 
 " let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
-" Load powerline sympbols
-let g:airline_powerline_fonts = 1
-
 nnoremap <c-p> :Files<cr>
 nnoremap <Leader>s :w<cr>
 nnoremap <Leader>q  :q<cr>
-nnoremap <Leader>e  :E<cr>
+nnoremap <Leader>e  :Explore<cr>
 nnoremap <Leader>f  :Autoformat<cr>
 nmap <Leader>b :source ~/.vimrc<cr>
 nnoremap <Leader>c :bp\|bd #<CR>
@@ -59,10 +63,17 @@ nnoremap <Leader>h :Ag! <C-R><C-W><cr>:cw<cr>
 nnoremap <Leader>\ :vsplit<cr>
 nnoremap <Leader>g :G<cr>
 nnoremap <Leader>gp :Gpush<cr>
-nnoremap <Leader>gl :Gpull<cr>
+nnoremap <Leader>gu :Gpull<cr>
 nnoremap <Leader>gc :Gcommit<cr>
 nnoremap <Leader>cc :cclose<cr>
 set redrawtime=10000
+
+" RSpec
+let g:rspec_command = "!bundle exec rspec {spec}"
+nmap <Leader>rs :call RunCurrentSpecFile()<CR>
+nmap <Leader>r :call RunNearestSpec()<CR>
+nmap <Leader>l :call RunLastSpec()<CR>
+nmap <Leader>as :call RunAllSpecs()<CR>
 
 " Line moving and duplication
 execute "set <A-j>=∆"
@@ -81,6 +92,7 @@ set incsearch
 set modelines=0
 set nomodeline
 set mouse=a
+set tags=.tags
 set invlist listchars=tab:>-,trail:·,nbsp:·,space:·
 hi SpecialKey ctermfg=239
 "hi WhiteSpaceBol ctermfg=239
