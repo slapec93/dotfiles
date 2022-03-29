@@ -154,3 +154,5 @@ alias kubprod="gcloud container clusters get-credentials ip-kubernetes-prod --re
 function kns() {
   kubectl config set-context --current --namespace=$1
 }
+
+alias ctags="`brew --prefix`/bin/ctags"
