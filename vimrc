@@ -1,10 +1,57 @@
-" filetype plugin indent on
 filetype plugin on
 
-set encoding=utf-8
-
 let mapleader = " "
+nmap <Leader>b :source ~/.vimrc<cr>
+nnoremap <Leader>s :w<cr>
+nnoremap <Leader>q  :q<cr>
+nnoremap <Leader>e  :Explore<cr>
+nnoremap <Leader>j <C-w>j
+nnoremap <Leader>k <C-w>k
+nnoremap <Leader>h <C-w>h
+nnoremap <Leader>l <C-w>l
+nnoremap <Leader>p "+p
+nnoremap <Leader>] <C-w><C-]>
+inoremap jk <esc>
+nnoremap <Leader>rt :!retag<cr>
 
+" Line moving and duplication
+nnoremap ∆ :m .+1 <cr>== " Opttion + j
+nnoremap ˚ :m .-2 <cr>== " Opttion + k
+nnoremap Ô :t . <cr>== " Shift + Opttion + j
+
+set encoding=utf-8
+set cursorline
+set modelines=0
+set nomodeline
+set ignorecase
+set smartcase
+set smarttab
+set mouse=a
+set list listchars=tab:>-,trail:·,nbsp:·,space:·
+set autoread
+set tags=.tags
+set re=1
+set updatetime=100
+set shell=zsh\ -l
+
+set incsearch
+set hlsearch
+" Show number of matches
+set shortmess-=S
+
+" Load powerline sympbols
+let g:airline_powerline_fonts = 1
+
+" Set sidebar numbers
+set relativenumber
+set nu rnu
+if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
+	syntax on
+endif
+
+" ===========================================================================
+" PLUGINS
+" ===========================================================================
 if empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -12,99 +59,50 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'tomasiser/vim-code-dark'
-Plug 'chiel92/vim-autoformat'
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'junegunn/fzf', { 'do': './install --bin' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'vim-ruby/vim-ruby'
-Plug 'tpope/vim-bundler'
-Plug 'tpope/vim-rails'
-Plug 'tpope/vim-rake'
-Plug 'slim-template/vim-slim'
-Plug 'pangloss/vim-javascript'
-Plug 'cakebaker/scss-syntax.vim'
+Plug 'thoughtbot/vim-rspec'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'thoughtbot/vim-rspec'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'Chiel92/vim-autoformat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-commentary'
+Plug 'keith/rspec.vim'
 call plug#end()
 
-" VISUALS
+" File search
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
+let g:fzf_layout = { 'down': '40%' }
+let g:fzf_preview_window = []
+nnoremap <c-p> :Files<cr>
+nnoremap <Leader>f :Ag!<cr>
+nnoremap <Leader>h :Ag! <C-R><C-W><cr>
+
 colorscheme codedark
+hi LineNr ctermfg=245
+hi CursorLineNr ctermbg=63 ctermfg=255
+hi SpecialKey ctermfg=240
 
 " Load powerline sympbols
 let g:airline_powerline_fonts = 1
 
-set relativenumber
-set nu rnu
-if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-	syntax on
-endif
-
-" VISUALS END
-
-" Sets regex engine and solves Ruby type and navigation lagging:
-" https://stackoverflow.com/questions/16902317/vim-slow-with-ruby-syntax-highlighting
-set re=1
-
-" let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
-
-nnoremap <c-p> :Files<cr>
-nnoremap <Leader>s :w<cr>
-nnoremap <Leader>q  :q<cr>
-nnoremap <Leader>e  :Explore<cr>
-nnoremap <Leader>f  :Autoformat<cr>
-nmap <Leader>b :source ~/.vimrc<cr>
-nnoremap <Leader>c :bp\|bd #<CR>
-nnoremap <Leader>h :Ag! <C-R><C-W><cr>:cw<cr>
-nnoremap <Leader>\ :vsplit<cr>
+" Fugitive
 nnoremap <Leader>g :G<cr>
-nnoremap <Leader>gp :Gpush<cr>
-nnoremap <Leader>gu :Gpull<cr>
-nnoremap <Leader>gc :Gcommit<cr>
-nnoremap <Leader>cc :cclose<cr>
-set redrawtime=10000
+nnoremap <Leader>gp :G push<cr>
+nnoremap <Leader>gu :G pull<cr>
+nnoremap <Leader>gc :G commit<cr>
 
 " RSpec
-let g:rspec_command = "!bundle exec rspec {spec}"
-nmap <Leader>rs :call RunCurrentSpecFile()<CR>
-nmap <Leader>r :call RunNearestSpec()<CR>
-nmap <Leader>l :call RunLastSpec()<CR>
-nmap <Leader>as :call RunAllSpecs()<CR>
+let g:rspec_command = ":w | !bundle exec rspec {spec}"
+nmap <Leader>rs :call RunCurrentSpecFile()<cr>
+nmap <Leader>r :call RunNearestSpec()<cr>
+nmap <Leader>l :call RunLastSpec()<cr>
+nmap <Leader>as :call RunAllSpecs()<cr>
 
-" Line moving and duplication
-execute "set <A-j>=∆"
-nnoremap <A-j> :m .+1 <CR>==
-execute "set <A-k>=˚"
-nnoremap <A-k> :m .-2 <CR>==
-execute "set <S-A-j>=Ô"
-nnoremap <S-A-j> :t . <CR>==
-
-set cursorline
-set updatetime=100
-set backspace=2
-set noswapfile
-set ruler
-set incsearch
-set modelines=0
-set nomodeline
-set mouse=a
-set tags=.tags
-set invlist listchars=tab:>-,trail:·,nbsp:·,space:·
-hi SpecialKey ctermfg=239
-"hi WhiteSpaceBol ctermfg=239
-"hi WhiteSpaceMol ctermfg=235
-"match WhiteSpaceMol / /
-"2match WhiteSpaceBol /^ \+/
-
-au BufWrite * :Autoformat
-au VimResized * :wincmd =
-
-
-" Plugin Gitgutter
+" Gitgutter
 let g:gitgutter_override_sign_column_highlight = 0
 hi SignColumn ctermbg=black
 hi GitGutterAdd ctermbg=28 ctermfg=15
@@ -113,132 +111,11 @@ let g:gitgutter_sign_removed = '-'
 hi GitGutterDelete ctermbg=red
 hi GitGutterChangeDelete ctermbg=red
 
-au BufNewFile,BufRead *.slim set tabstop=2 noexpandtab
-
-au BufEnter,BufRead *.js.erb set ft=javascript
-
+" Autoformat
 let g:formatdef_rubocop = "'rubocop-daemon-wrapper --auto-correct -o /dev/null -s '.bufname('%').'\| sed -n 2,\\$p'"
 let g:formatters_ruby = ['rubocop']
-let g:autoformat_autoindent = 0
-let g:autoformat_retab = 0
+au BufWrite * :Autoformat
 
-" COC
-" It is handle by coc, disable in vim-go
-let g:go_def_mapping_enabled = 0
-" Endwise
-" disable mapping to not break coc.nvim
-let g:endwise_no_mappings = 1
-
-set hidden
-set cmdheight=2
-set shortmess+=c
-set signcolumn=yes
-" Use tab for trigger completion
-" It would jump snippet positions too, but use C-j instead - more reliable
-inoremap <silent><expr> <TAB>
-			\ pumvisible() ? coc#_select_confirm() :
-			\ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-			\ <SID>check_back_space() ? "\<TAB>" :
-			\ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-	let col = col('.') - 1
-	return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-	if (index(['vim','help'], &filetype) >= 0)
-		execute 'h '.expand('<cword>')
-	else
-		call CocAction('doHover')
-	endif
-endfunction
-
-" Highlight symbol under cursor on CursorHold
-au CursorHold * silent call CocActionAsync('highlight')
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-augroup mygroup
-	autocmd!
-	" Setup formatexpr specified filetype(s).
-	autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-	" Update signature help on jump placeholder
-	autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-" xmap <leader>a  <Plug>(coc-codeaction-selected)
-" nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-" nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-" nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Create mappings for function text object, requires document symbols feature of languageserver.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
-
-" Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-" nmap <silent> <C-d> <Plug>(coc-range-select)
-" xmap <silent> <C-d> <Plug>(coc-range-select)
-
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
-
-" Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-
-" Using CocList
-" Show all diagnostics
-" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-
-" COC END
-
+" Commentary
+nmap <Leader>/ <Plug>CommentaryLine
+vmap <Leader>/ <Plug>Commentary

@@ -6,3 +6,6 @@ ln -s ~/develop/dotfiles/zshrc ~/.zshrc
 ln -s ~/develop/dotfiles/zshenv ~/.zshenv
 ln -s ~/develop/dotfiles/oh-my-zsh ~/.oh-my-zsh/custom/themes
 ln -s ~/develop/dotfiles/oh-my-zsh ~/.oh-my-zsh/custom/plugins
+
+mkdir -p ~/.config/nvim
+ln -s ~/develop/dotfiles/vim/nvim_init.vim ~/.config/nvim/init.vim
