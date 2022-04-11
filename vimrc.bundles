@@ -1,0 +1,105 @@
+" ===========================================================================
+" PLUGINS
+" ===========================================================================
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'tomasiser/vim-code-dark'
+Plug 'vim-airline/vim-airline'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'thoughtbot/vim-rspec'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'zivyangll/git-blame.vim'
+Plug 'Chiel92/vim-autoformat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-commentary'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'vim-test/vim-test'
+Plug 'christoomey/vim-tmux-runner'
+call plug#end()
+
+"autocmd VimEnter * PlugClean! | PlugUpdate --sync | :q
+
+" File search
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
+let $FZF_DEFAULT_OPTS='--bind "∆:down,˚:up"'
+let g:fzf_layout = { 'down': '40%' }
+let g:fzf_preview_window = []
+nnoremap <c-p> :Files<cr>
+nnoremap <Leader>f :Ag!<cr>
+nnoremap <Leader>h :Ag! <C-R><C-W><cr>
+
+colorscheme codedark
+hi LineNr ctermfg=245
+hi CursorLineNr ctermbg=63 ctermfg=255
+hi SpecialKey ctermfg=240
+
+" Load powerline sympbols
+let g:airline_powerline_fonts = 1
+
+" Fugitive
+nnoremap <Leader>g :G<cr>
+nnoremap <Leader>gp :G push<cr>
+nnoremap <Leader>gu :G pull<cr>
+nnoremap <Leader>gc :G commit<cr>
+
+" RSpec
+let g:rspec_command = ":w | !bundle exec rspec {spec}"
+nmap <Leader>rs :TestFile<cr>
+nmap <Leader>r :TestNearest<cr>
+nmap <Leader>l :TestLast<cr>
+nmap <Leader>as :TestSuite<cr>
+
+" Gitgutter
+let g:gitgutter_override_sign_column_highlight = 0
+hi SignColumn ctermbg=black
+hi GitGutterAdd ctermbg=28 ctermfg=15
+hi GitGutterChange ctermbg=blue ctermfg=232
+let g:gitgutter_sign_removed = '-'
+hi GitGutterDelete ctermbg=red
+hi GitGutterChangeDelete ctermbg=red
+nnoremap <Leader>n :GitGutterNextHunk<cr>
+nnoremap <Leader>N :GitGutterPreviousHunk<cr>
+
+" Autoformat
+let g:formatdef_rubocop = "'rubocop-daemon-wrapper --auto-correct -o /dev/null -s '.bufname('%').'\| sed -n 2,\\$p'"
+let g:formatters_ruby = ['rubocop']
+au BufWrite * :call CocActionAsync('format')
+
+" Commentary
+nmap <Leader>/ <Plug>CommentaryLine
+vmap <Leader>/ <Plug>Commentary
+
+nnoremap <Leader>gb :<C-u>call gitblame#echo()<CR>
+
+" CoC
+let g:airline#extensions#branch#vcs_checks = []
+let g:coc_global_extensions = ['coc-solargraph']
+let g:loaded_perl_provider = 0
+let g:coc_filetype_map = {
+  \ 'rspec.ruby': 'ruby',
+  \ }
+inoremap <silent><expr> <TAB>
+			\ pumvisible() ? "\<C-n>" :
+			\ <SID>check_back_space() ? "\<TAB>" :
+			\ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+inoremap <silent><expr> <c-space> coc#refresh()
+nmap <silent> gd <Plug>(coc-definition)
+
+" Vim Test
+let test#strategy = "vtr"
