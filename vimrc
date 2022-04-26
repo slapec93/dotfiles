@@ -9,9 +9,13 @@ nnoremap <Leader>j <C-w>j
 nnoremap <Leader>k <C-w>k
 nnoremap <Leader>h <C-w>h
 nnoremap <Leader>l <C-w>l
+nnoremap <Leader>\ :vsplit<cr>
 nnoremap <Leader>p "+p
+vnoremap <Leader>y "+y
+nnoremap <Leader>y "+yy
 nnoremap <Leader>] <C-w><C-]>
 inoremap jk <esc>
+nnoremap <esc> :noh<cr>
 nnoremap <Leader>rt :!retag<cr>
 
 " Line moving and duplication
@@ -36,6 +40,7 @@ set autowrite
 
 set incsearch
 set hlsearch
+let g:netrw_preview = 1
 " Show number of matches
 set shortmess-=S
 
@@ -48,6 +53,7 @@ set nu rnu
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
 	 syntax on
 endif
+au VimResized * :wincmd =
 
 if filereadable(expand("~/.vimrc.bundles"))
 	source ~/.vimrc.bundles

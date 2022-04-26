@@ -14,27 +14,28 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'thoughtbot/vim-rspec'
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
 Plug 'zivyangll/git-blame.vim'
 Plug 'Chiel92/vim-autoformat'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-endwise'
+Plug 'windwp/nvim-autopairs'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-endwise'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'vim-test/vim-test'
 Plug 'christoomey/vim-tmux-runner'
+Plug 'lewis6991/gitsigns.nvim'
 call plug#end()
 
 "autocmd VimEnter * PlugClean! | PlugUpdate --sync | :q
 
+
 " File search
-let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
-let $FZF_DEFAULT_OPTS='--bind "∆:down,˚:up"'
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g "" -U'
+let $FZF_DEFAULT_OPTS='--color="bg+:148,fg+:232,gutter:-1,hl:148,hl+:160" --bind "∆:down,˚:up"'
 let g:fzf_layout = { 'down': '40%' }
 let g:fzf_preview_window = []
 nnoremap <c-p> :Files<cr>
 nnoremap <Leader>f :Ag!<cr>
-nnoremap <Leader>h :Ag! <C-R><C-W><cr>
+nnoremap <Leader>ff :Ag! <C-R><C-W><cr>
 
 colorscheme codedark
 hi LineNr ctermfg=245
@@ -54,19 +55,29 @@ nnoremap <Leader>gc :G commit<cr>
 let g:rspec_command = ":w | !bundle exec rspec {spec}"
 nmap <Leader>rs :TestFile<cr>
 nmap <Leader>r :TestNearest<cr>
-nmap <Leader>l :TestLast<cr>
+nmap <Leader>ls :TestLast<cr>
 nmap <Leader>as :TestSuite<cr>
 
 " Gitgutter
-let g:gitgutter_override_sign_column_highlight = 0
 hi SignColumn ctermbg=black
-hi GitGutterAdd ctermbg=28 ctermfg=15
-hi GitGutterChange ctermbg=blue ctermfg=232
-let g:gitgutter_sign_removed = '-'
-hi GitGutterDelete ctermbg=red
-hi GitGutterChangeDelete ctermbg=red
-nnoremap <Leader>n :GitGutterNextHunk<cr>
-nnoremap <Leader>N :GitGutterPreviousHunk<cr>
+hi GitSignsAdd ctermbg=28 ctermfg=15
+hi GitSignsChange ctermbg=blue ctermfg=232
+hi GitSignsDelete ctermbg=red ctermfg=232
+hi GitSignsChangeDelete ctermbg=red ctermfg=232
+
+" GitSigns setup
+lua << EOF
+require('gitsigns').setup {
+  signs = {
+    add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
+    change       = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    delete       = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    topdelete    = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+  },
+  signcolumn = true
+}
+EOF
 
 " Autoformat
 let g:formatdef_rubocop = "'rubocop-daemon-wrapper --auto-correct -o /dev/null -s '.bufname('%').'\| sed -n 2,\\$p'"
@@ -84,8 +95,8 @@ let g:airline#extensions#branch#vcs_checks = []
 let g:coc_global_extensions = ['coc-solargraph']
 let g:loaded_perl_provider = 0
 let g:coc_filetype_map = {
-  \ 'rspec.ruby': 'ruby',
-  \ }
+			\ 'rspec.ruby': 'ruby',
+			\ }
 inoremap <silent><expr> <TAB>
 			\ pumvisible() ? "\<C-n>" :
 			\ <SID>check_back_space() ? "\<TAB>" :
@@ -95,9 +106,7 @@ function! s:check_back_space() abort
 	let col = col('.') - 1
 	return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
+inoremap <silent><expr> <CR> pumvisible() ? coc#_select_confirm() :"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>\<c-r>=EndwiseDiscretionary()\<CR>" 
 inoremap <silent><expr> <c-space> coc#refresh()
 nmap <silent> gd <Plug>(coc-definition)
 
