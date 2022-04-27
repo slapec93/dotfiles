@@ -23,6 +23,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'vim-test/vim-test'
 Plug 'christoomey/vim-tmux-runner'
 Plug 'lewis6991/gitsigns.nvim'
+Plug 'APZelos/blamer.nvim'
 call plug#end()
 
 "autocmd VimEnter * PlugClean! | PlugUpdate --sync | :q
@@ -58,14 +59,13 @@ nmap <Leader>r :TestNearest<cr>
 nmap <Leader>ls :TestLast<cr>
 nmap <Leader>as :TestSuite<cr>
 
-" Gitgutter
+" GitSigns setup
 hi SignColumn ctermbg=black
 hi GitSignsAdd ctermbg=28 ctermfg=15
 hi GitSignsChange ctermbg=blue ctermfg=232
 hi GitSignsDelete ctermbg=red ctermfg=232
 hi GitSignsChangeDelete ctermbg=red ctermfg=232
 
-" GitSigns setup
 lua << EOF
 require('gitsigns').setup {
   signs = {
@@ -112,3 +112,19 @@ nmap <silent> gd <Plug>(coc-definition)
 
 " Vim Test
 let test#strategy = "vtr"
+
+" Blamer.vim
+let g:blamer_enabled = 1
+let g:blamer_delay = 500
+let g:blamer_prefix = '     > '
+let g:blamer_template = '<author>, <committer-time> • <summary> @<commit-short>'
+let g:blamer_date_format = '%Y-%m-%d'
+highlight Blamer ctermfg=245
+
+nnoremap <Leader><Leader>s :call FindSpec()<cr>
+function FindSpec()
+	let l:current_file_path = @%
+	let l:current_file_path = substitute(current_file_path, "app", "spec", "")
+	let l:current_file_path = substitute(current_file_path, ".rb", "_spec.rb", "")
+	execute 'vsplit' l:current_file_path
+endfunction
