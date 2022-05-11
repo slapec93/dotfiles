@@ -24,19 +24,22 @@ Plug 'vim-test/vim-test'
 Plug 'christoomey/vim-tmux-runner'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'APZelos/blamer.nvim'
+Plug 'jehuipark/github-co-author-vim-plugin'
+Plug 'slim-template/vim-slim'
 call plug#end()
 
 "autocmd VimEnter * PlugClean! | PlugUpdate --sync | :q
 
 
 " File search
-let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g "" -U'
-let $FZF_DEFAULT_OPTS='--color="bg+:148,fg+:232,gutter:-1,hl:148,hl+:160" --bind "∆:down,˚:up"'
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g "" -U '
+let $FZF_DEFAULT_OPTS='--color="bg+:122,fg+:232,gutter:-1,hl:122,hl+:160" --bind "∆:down,˚:up"'
 let g:fzf_layout = { 'down': '40%' }
 let g:fzf_preview_window = []
 nnoremap <c-p> :Files<cr>
 nnoremap <Leader>f :Ag!<cr>
 nnoremap <Leader>ff :Ag! <C-R><C-W><cr>
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, '--color-path "38;5;33" --color-line-number "38;5;33"', fzf#vim#with_preview(), <bang>0)
 
 colorscheme codedark
 hi LineNr ctermfg=245
@@ -78,6 +81,8 @@ require('gitsigns').setup {
   signcolumn = true
 }
 EOF
+vnoremap <Leader>l '<,'>diffget //3
+vnoremap <Leader>h '<,'>diffget //2
 
 " Autoformat
 let g:formatdef_rubocop = "'rubocop-daemon-wrapper --auto-correct -o /dev/null -s '.bufname('%').'\| sed -n 2,\\$p'"
@@ -114,12 +119,15 @@ nmap <silent> gd <Plug>(coc-definition)
 let test#strategy = "vtr"
 
 " Blamer.vim
-let g:blamer_enabled = 1
+" let g:blamer_enabled = 1
 let g:blamer_delay = 500
 let g:blamer_prefix = '     > '
 let g:blamer_template = '<author>, <committer-time> • <summary> @<commit-short>'
 let g:blamer_date_format = '%Y-%m-%d'
 highlight Blamer ctermfg=245
+
+let g:github_co_author_list_path = '~/.vim/github-co-author-list'
+" inoremap <Leader>ca <C-R>=GitHubCoAuthor#GetTeam()<cr>
 
 nnoremap <Leader><Leader>s :call FindSpec()<cr>
 function FindSpec()

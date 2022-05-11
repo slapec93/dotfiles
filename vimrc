@@ -4,6 +4,7 @@ let mapleader = " "
 nmap <Leader>b :source ~/.vimrc<cr>
 nnoremap <Leader>s :w<cr>
 noremap <Leader>q  :q<cr>
+noremap <Leader>qq  :q!<cr>
 nnoremap <Leader>e  :Explore<cr>
 nnoremap <Leader>j <C-w>j
 nnoremap <Leader>k <C-w>k
@@ -17,6 +18,7 @@ nnoremap <Leader>] <C-w><C-]>
 inoremap jk <esc>
 nnoremap <esc> :noh<cr>
 nnoremap <Leader>rt :!retag<cr>
+nnoremap <cr><cr> o<esc>
 
 " Line moving and duplication
 nnoremap ∆ :m .+1 <cr>== " Opttion + j
@@ -37,6 +39,8 @@ set tags=.tags
 set re=1
 set updatetime=100
 set autowrite
+
+set splitright
 
 set incsearch
 set hlsearch
