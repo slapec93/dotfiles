@@ -10,16 +10,15 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="agnostercust"
 
-export GOPATH="$HOME/go"
-export GOBIN="$HOME/go/bin"
-export LC_ALL=en_US.UTF-8
-export PATH=$PATH:$GOBIN
-source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
-source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+#export GOPATH="$HOME/go"
+#export GOBIN="$HOME/go/bin"
+#export LC_ALL=en_US.UTF-8
+#export PATH=$PATH:$GOBIN
+#source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+#source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
 #export PATH=$PATH:"/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
-alias bastion="gcloud compute ssh --project=bitrise-platform --zone=us-central1-c bastion-vm"
 
-alias gotest=$'fswatch -e ".*" -i "\\.go$" . | xargs -n1 -I {} sh -c "clear && printf \'\\e[3J\';gotestsum -f short-verbose"'
+#alias gotest=$'fswatch -e ".*" -i "\\.go$" . | xargs -n1 -I {} sh -c "clear && printf \'\\e[3J\';gotestsum -f short-verbose"'
 export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
   [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
@@ -147,8 +146,8 @@ function gp() {
 alias gu="git pull"
 
 alias tks="tmux kill-session"
-alias kubstag="gcloud container clusters get-credentials ip-kubernetes-dev --region us-central1-c --project ip-kubernetes-dev"
-alias kubprod="gcloud container clusters get-credentials ip-kubernetes-prod --region us-central1 --project ip-kubernetes-prod"
+#alias kubstag="gcloud container clusters get-credentials ip-kubernetes-dev --region us-central1-c --project ip-kubernetes-dev"
+#alias kubprod="gcloud container clusters get-credentials ip-kubernetes-prod --region us-central1 --project ip-kubernetes-prod"
 
 
 function kns() {
