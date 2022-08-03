@@ -155,3 +155,5 @@ function kns() {
 }
 
 alias ctags="`brew --prefix`/bin/ctags"
+
+alias retag="$(brew --prefix)/bin/ctags -R --languages=ruby --exclude=.git --exclude=log --exclude=node_modules -f .tags . $(bundle list --paths | tr '\n' ' ')"

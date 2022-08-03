@@ -1,0 +1,9 @@
+{
+	"diagnostic.virtualText": true,
+	"diagnostic.virtualTextCurrentLineOnly": false,
+	"solargraph.diagnostics": true,
+	"solargraph.formatting": true,
+	"solargraph.hover": true,
+	"solargraph.autoformat": true,
+	"solargraph.commandPath": "/Users/gergelybekesi/.rbenv/shims/solargraph"
+}

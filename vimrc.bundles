@@ -1,0 +1,138 @@
+" ===========================================================================
+" PLUGINS
+" ===========================================================================
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'tomasiser/vim-code-dark'
+Plug 'vim-airline/vim-airline'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'thoughtbot/vim-rspec'
+Plug 'tpope/vim-fugitive'
+Plug 'zivyangll/git-blame.vim'
+Plug 'Chiel92/vim-autoformat'
+Plug 'windwp/nvim-autopairs'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-endwise'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'vim-test/vim-test'
+Plug 'christoomey/vim-tmux-runner'
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'APZelos/blamer.nvim'
+Plug 'jehuipark/github-co-author-vim-plugin'
+Plug 'slim-template/vim-slim'
+call plug#end()
+
+"autocmd VimEnter * PlugClean! | PlugUpdate --sync | :q
+
+
+" File search
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g "" -U '
+let $FZF_DEFAULT_OPTS='--color="bg+:122,fg+:232,gutter:-1,hl:122,hl+:160" --bind "∆:down,˚:up"'
+let g:fzf_layout = { 'down': '40%' }
+let g:fzf_preview_window = []
+nnoremap <c-p> :Files<cr>
+nnoremap <Leader>f :Ag!<cr>
+nnoremap <Leader>ff :Ag! <C-R><C-W><cr>
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, '--color-path "38;5;33" --color-line-number "38;5;33"', fzf#vim#with_preview(), <bang>0)
+
+colorscheme codedark
+hi LineNr ctermfg=245
+hi CursorLineNr ctermbg=63 ctermfg=255
+hi SpecialKey ctermfg=240
+
+" Load powerline sympbols
+let g:airline_powerline_fonts = 1
+
+" Fugitive
+nnoremap <Leader>g :G<cr>
+nnoremap <Leader>gp :G push<cr>
+nnoremap <Leader>gu :G pull<cr>
+nnoremap <Leader>gc :G commit<cr>
+
+" RSpec
+let g:rspec_command = ":w | !bundle exec rspec {spec}"
+nmap <Leader>rs :TestFile<cr>
+nmap <Leader>r :TestNearest<cr>
+nmap <Leader>ls :TestLast<cr>
+nmap <Leader>as :TestSuite<cr>
+
+" GitSigns setup
+hi SignColumn ctermbg=black
+hi GitSignsAdd ctermbg=28 ctermfg=15
+hi GitSignsChange ctermbg=blue ctermfg=232
+hi GitSignsDelete ctermbg=red ctermfg=232
+hi GitSignsChangeDelete ctermbg=red ctermfg=232
+
+lua << EOF
+require('gitsigns').setup {
+  signs = {
+    add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
+    change       = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    delete       = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    topdelete    = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+  },
+  signcolumn = true
+}
+EOF
+vnoremap <Leader>l '<,'>diffget //3
+vnoremap <Leader>h '<,'>diffget //2
+
+" Autoformat
+let g:formatdef_rubocop = "'rubocop-daemon-wrapper --auto-correct -o /dev/null -s '.bufname('%').'\| sed -n 2,\\$p'"
+let g:formatters_ruby = ['rubocop']
+au BufWrite * :call CocActionAsync('format')
+
+" Commentary
+nmap <Leader>/ <Plug>CommentaryLine
+vmap <Leader>/ <Plug>Commentary
+
+nnoremap <Leader>gb :<C-u>call gitblame#echo()<CR>
+
+" CoC
+let g:airline#extensions#branch#vcs_checks = []
+let g:coc_global_extensions = ['coc-solargraph']
+let g:loaded_perl_provider = 0
+let g:coc_filetype_map = {
+			\ 'rspec.ruby': 'ruby',
+			\ }
+inoremap <silent><expr> <TAB>
+			\ pumvisible() ? "\<C-n>" :
+			\ <SID>check_back_space() ? "\<TAB>" :
+			\ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+inoremap <silent><expr> <CR> pumvisible() ? coc#_select_confirm() :"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>\<c-r>=EndwiseDiscretionary()\<CR>" 
+inoremap <silent><expr> <c-space> coc#refresh()
+nmap <silent> gd <Plug>(coc-definition)
+
+" Vim Test
+let test#strategy = "vtr"
+
+" Blamer.vim
+" let g:blamer_enabled = 1
+let g:blamer_delay = 500
+let g:blamer_prefix = '     > '
+let g:blamer_template = '<author>, <committer-time> • <summary> @<commit-short>'
+let g:blamer_date_format = '%Y-%m-%d'
+highlight Blamer ctermfg=245
+
+let g:github_co_author_list_path = '~/.vim/github-co-author-list'
+" inoremap <Leader>ca <C-R>=GitHubCoAuthor#GetTeam()<cr>
+
+nnoremap <Leader><Leader>s :call FindSpec()<cr>
+function FindSpec()
+	let l:current_file_path = @%
+	let l:current_file_path = substitute(current_file_path, "app", "spec", "")
+	let l:current_file_path = substitute(current_file_path, ".rb", "_spec.rb", "")
+	execute 'vsplit' l:current_file_path
+endfunction
