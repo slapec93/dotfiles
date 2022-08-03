@@ -26,5 +26,7 @@ colors:
                 cyan:    '0x99faf2'
                 white:   '0xffffff'
 font:
+        size: 12.0
         normal:
                 family: Source Code Pro for Powerline
+alt_send_esc: true
