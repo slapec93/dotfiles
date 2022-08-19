@@ -10,18 +10,9 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="agnostercust"
 
-#export GOPATH="$HOME/go"
-#export GOBIN="$HOME/go/bin"
-#export LC_ALL=en_US.UTF-8
-#export PATH=$PATH:$GOBIN
-#source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
-#source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-#export PATH=$PATH:"/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
-
-#alias gotest=$'fswatch -e ".*" -i "\\.go$" . | xargs -n1 -I {} sh -c "clear && printf \'\\e[3J\';gotestsum -f short-verbose"'
 export NVM_DIR="$HOME/.nvm"
-  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -146,14 +137,6 @@ function gp() {
 alias gu="git pull"
 
 alias tks="tmux kill-session"
-#alias kubstag="gcloud container clusters get-credentials ip-kubernetes-dev --region us-central1-c --project ip-kubernetes-dev"
-#alias kubprod="gcloud container clusters get-credentials ip-kubernetes-prod --region us-central1 --project ip-kubernetes-prod"
+ctags=/opt/homebrew/bin/ctags
 
-
-function kns() {
-  kubectl config set-context --current --namespace=$1
-}
-
-alias ctags="`brew --prefix`/bin/ctags"
-
-alias retag="$(brew --prefix)/bin/ctags -R --languages=ruby --exclude=.git --exclude=log --exclude=node_modules -f .tags . $(bundle list --paths | tr '\n' ' ')"
+alias p="bin/pull"
