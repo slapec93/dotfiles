@@ -15,5 +15,3 @@ ln -s ~/develop/dotfiles/nvim/lua/plugins.lua ~/.config/nvim/lua/plugins.lua
 
 brew install ripgrep
 brew install fd
-
-ln -s ~/develop/dotfiles/solargraph.yml ~/.config/solargraph/config.yml

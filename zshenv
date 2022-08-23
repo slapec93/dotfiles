@@ -12,5 +12,3 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 
 eval "$(rbenv init -)"
-
-export SOLARGRAPH_GLOBAL_CONFIG='~/.config/solargraph/config.yml'
