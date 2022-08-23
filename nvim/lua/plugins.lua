@@ -8,6 +8,10 @@ require('packer').startup(function(use)
 
   use 'hrsh7th/cmp-nvim-lsp'
 
+  use 'windwp/nvim-autopairs'
+
+  use 'lewis6991/gitsigns.nvim'
+
   use 'Mofiqul/vscode.nvim'
 
   use {
@@ -18,7 +22,9 @@ require('packer').startup(function(use)
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate'
-}
+  }
+
+  use 'RRethy/nvim-treesitter-endwise'
 
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.x',
@@ -40,6 +46,8 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
 end
+
+vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
 
 local cmp = require('cmp')
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -64,8 +72,6 @@ cmp.setup {
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
       else
         fallback()
       end
@@ -73,8 +79,6 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
       else
         fallback()
       end
@@ -85,7 +89,41 @@ cmp.setup {
   },
 }
 
+require("nvim-autopairs").setup {}
+
+require('nvim-treesitter.configs').setup {
+  ensure_installed = { "ruby" },
+  auto_install = true,
+  highlight = {
+    enable = true,
+  },
+  endwise = {
+    enable = true,
+  },
+}
+
+require('gitsigns').setup {
+  signs = {
+    add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
+    change       = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    delete       = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    topdelete    = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+  },
+  signcolumn = true
+}
+
 require('vscode').setup({})
+
+local hi = vim.api.nvim_set_hl
+hi(0, 'LineNr', {fg='#8a8a8a'})
+hi(0, "CursorLineNr", {bg='#5f5fff', fg='#eeeeee'})
+hi(0, 'SpecialKey', {fg='#585858'})
+hi(0, 'SignColumn', {bg='#000000'})
+hi(0, 'GitSignsAdd', {bg='#008700', fg='#ffffff'})
+hi(0, 'GitSignsChange', {bg='#0000ff', fg='#080808'})
+hi(0, 'GitSignsDelete', {bg='#ff0000', fg='#080808'})
+hi(0, 'GitSignsChangeDelete', {bg='#ff0000', fg='#080808'})
 
 require('lualine').setup({
     options = {
@@ -101,13 +139,6 @@ require('lualine').setup({
       lualine_z = {'location'}
     },
   })
-
-  require("nvim-treesitter.configs").setup {
-    rainbow = {
-      enable = true,
-      extended_mode = true
-    }
-  }
 
 local map = vim.api.nvim_set_keymap
 map('n', '<c-p>', ":lua require('telescope.builtin').find_files()<cr>", {noremap = true})
