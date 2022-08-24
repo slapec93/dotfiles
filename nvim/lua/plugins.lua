@@ -4,9 +4,15 @@ require('packer').startup(function(use)
 
   use 'neovim/nvim-lspconfig'
 
+  use 'arkav/lualine-lsp-progress'
+
   use 'hrsh7th/nvim-cmp'
 
   use 'hrsh7th/cmp-nvim-lsp'
+
+  use 'L3MON4D3/LuaSnip'
+
+  use 'saadparwaiz1/cmp_luasnip'
 
   use 'windwp/nvim-autopairs'
 
@@ -34,7 +40,7 @@ end)
 
 local lspconfig = require('lspconfig')
 
-local servers = { 'solargraph' }
+local servers = { 'solargraph', 'tsserver' }
 
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
@@ -49,7 +55,6 @@ end
 
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
 
-local cmp = require('cmp')
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
@@ -60,7 +65,17 @@ for _, lsp in ipairs(servers) do
   }
 end
 
+local luasnip = require 'luasnip'
+luasnip.filetype_extend("ruby", { "rspec" })
+require("luasnip.loaders.from_snipmate").lazy_load()
+
+local cmp = require('cmp')
 cmp.setup {
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
   mapping = cmp.mapping.preset.insert({
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -72,6 +87,8 @@ cmp.setup {
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
       else
         fallback()
       end
@@ -79,6 +96,8 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
       else
         fallback()
       end
@@ -86,6 +105,7 @@ cmp.setup {
   }),
   sources = {
     { name = 'nvim_lsp' },
+    { name = 'luasnip' },
   },
 }
 
@@ -125,16 +145,21 @@ hi(0, 'GitSignsChange', {bg='#0000ff', fg='#080808'})
 hi(0, 'GitSignsDelete', {bg='#ff0000', fg='#080808'})
 hi(0, 'GitSignsChangeDelete', {bg='#ff0000', fg='#080808'})
 
+local lsp_progress = {'lsp_progress', timer = { progress_enddelay = 500, spinner = 500, lsp_client_name_enddelay = 500 }, spinner_symbols = { '🌑 ', '🌒 ', '🌓 ', '🌔 ', '🌕 ', '🌖 ', '🌗 ', '🌘 ' }}
+
 require('lualine').setup({
     options = {
       theme = 'vscode',
-      powerline_fonts = true
+      powerline_fonts = true,
+      refresh = {
+        statusline = 500
+      }
     },
     sections = {
       lualine_a = {'mode'},
       lualine_b = {'branch', 'diff', 'diagnostics'},
       lualine_c = {'filename'},
-      lualine_x = {'encoding', 'fileformat', 'filetype'},
+      lualine_x = {lsp_progress, 'filetype'},
       lualine_y = {'progress'},
       lualine_z = {'location'}
     },

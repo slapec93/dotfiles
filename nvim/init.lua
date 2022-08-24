@@ -16,7 +16,7 @@ map('n', '<leader>p', '"+p', {noremap = true})
 map('v', '<leader>y', '"+y', {noremap = true})
 map('n', '<leader>y', '"+yy', {noremap = true})
 map('n', '<cr><cr>', 'o<esc>', {noremap = true})
-map('n', '<esc>', ':noh', {noremap = true})
+map('n', '<esc>', ':noh<cr>', {noremap = true})
 
 -- Line moving and duplication
 map('n', '∆', ':m .+1<cr>==', {noremap = true}) -- Opttion + j
