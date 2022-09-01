@@ -1,28 +1,3 @@
-vim.g.mapleader = ' '
-
-local map = vim.api.nvim_set_keymap
-
-map('n', '<leader>b', ':luafile ~/.config/nvim/init.lua<cr>', {})
-map('n', '<leader>s', ':w<cr>', {noremap = true})
-map('', '<leader>q', ':q<cr>', {noremap = true})
-map('', '<leader>qq', ':q!<cr>', {noremap = true})
-map('n', '<leader>e', ':Explore<cr>', {noremap = true})
-map('n', '<leader>j', '<C-w>j', {noremap = true})
-map('n', '<leader>k', '<C-w>k', {noremap = true})
-map('n', '<leader>h', '<C-w>h', {noremap = true})
-map('n', '<leader>l', '<C-w>l', {noremap = true})
-map('n', '<leader>\\', ':vsplit<cr>', {noremap = true})
-map('n', '<leader>p', '"+p', {noremap = true})
-map('v', '<leader>y', '"+y', {noremap = true})
-map('n', '<leader>y', '"+yy', {noremap = true})
-map('n', '<cr><cr>', 'o<esc>', {noremap = true})
-map('n', '<esc>', ':noh<cr>', {noremap = true})
-
--- Line moving and duplication
-map('n', '∆', ':m .+1<cr>==', {noremap = true}) -- Opttion + j
-map('n', '˚', ':m .-2<cr>==', {noremap = true}) -- Opttion + k
-map('n', '˚', ':t . <cr>==', {noremap = true}) -- Shift + Opttion + j
-
 local set = vim.opt
 
 set.encoding = 'utf-8'
@@ -52,8 +27,8 @@ set.nu = true
 set.rnu = true
 set.termguicolors = true
 
-local autocmd = vim.api.nvim_create_autocmd
-
-autocmd("VimResized", {pattern = "*", command = ":wincmd ="})
-
 require('plugins')
+require('autocmd')
+require('key_mappings')
+require('colors')
+require('git')

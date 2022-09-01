@@ -9,9 +9,13 @@ ln -s ~/develop/dotfiles/github-co-author-list ~/.vim/github-co-author-list
 ln -s ~/develop/dotfiles/oh-my-zsh ~/.oh-my-zsh/custom/themes
 ln -s ~/develop/dotfiles/oh-my-zsh ~/.oh-my-zsh/custom/plugins
 
-mkdir -p ~/.config/nvim/lua
+mkdir -p ~/.config/nvim/ftplugin
+ln -s ~/develop/dotfiles/nvim/ftplugin ~/.config/nvim/ftplugin
 ln -s ~/develop/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
-ln -s ~/develop/dotfiles/nvim/lua/plugins.lua ~/.config/nvim/lua/plugins.lua
+mkdir -p ~/.config/nvim/lua
+ln -s ~/develop/dotfiles/nvim/lua ~/.config/nvim/lua
+mkdir -p ~/.config/nvim/snippets
+ln -s ~/develop/dotfiles/snippets ~/.config/nvim/snippets
 
 brew install ripgrep
 brew install fd

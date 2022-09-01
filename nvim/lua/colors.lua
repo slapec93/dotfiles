@@ -1,0 +1,15 @@
+local hi = vim.api.nvim_set_hl
+hi(0, 'LineNr', {fg='#8a8a8a'})
+hi(0, "CursorLineNr", {bg='#5f5fff', fg='#eeeeee'})
+hi(0, 'SpecialKey', {fg='#585858'})
+hi(0, 'SignColumn', {bg='#000000'})
+hi(0, 'GitSignsAdd', {bg='#008700', fg='#ffffff'})
+hi(0, 'GitSignsChange', {bg='#0000ff', fg='#080808'})
+hi(0, 'GitSignsDelete', {bg='#ff0000', fg='#080808'})
+hi(0, 'GitSignsChangeDelete', {bg='#ff0000', fg='#080808'})
+
+hi(0, 'NeogitDiffAddHighlight', {bg='#468eab', fg='#03ad03'})
+hi(0, 'NeogitDiffDeleteHighlight', {bg='#468eab', fg='#990202'})
+hi(0, 'NeogitDiffContextHighlight', {bg='#333333', fg='#b2b2b2'})
+hi(0, 'NeogitHunkHeader', {fg='#346a80', bg='#404040'})
+hi(0, 'NeogitHunkHeaderHighlight', {fg='#cccccc', bg='#4d4d4d'})

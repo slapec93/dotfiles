@@ -20,6 +20,14 @@ require('packer').startup(function(use)
 
   use 'Mofiqul/vscode.nvim'
 
+  use 'klen/nvim-test'
+
+  use 'mhartington/formatter.nvim'
+
+  use { 'akinsho/git-conflict.nvim', tag = "*" }
+
+  use { 'TimUntersberger/neogit', requires = {'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim'} }
+
   use {
     'nvim-lualine/lualine.nvim',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
@@ -32,15 +40,32 @@ require('packer').startup(function(use)
 
   use 'RRethy/nvim-treesitter-endwise'
 
+  use 'windwp/nvim-ts-autotag'
+
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.x',
     requires = { {'nvim-lua/plenary.nvim'} }
   }
 end)
 
+require('telescope').setup{
+  pickers = {
+    find_files = {
+      find_command = {
+        'fd',
+        '-HI',
+        '-t', 'file',
+        '-E', '.git',
+        '-E', 'node_modules',
+        '-E', 'tmp'
+      }
+    }
+  }
+}
+
 local lspconfig = require('lspconfig')
 
-local servers = { 'solargraph', 'tsserver' }
+local servers = { 'solargraph', 'tsserver', 'eslint' }
 
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
@@ -53,7 +78,6 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
 end
 
-vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
@@ -79,7 +103,7 @@ cmp.setup {
   mapping = cmp.mapping.preset.insert({
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-.>'] = cmp.mapping.complete(),
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
@@ -120,30 +144,12 @@ require('nvim-treesitter.configs').setup {
   endwise = {
     enable = true,
   },
-}
-
-require('gitsigns').setup {
-  signs = {
-    add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
-    change       = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
-    delete       = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-    topdelete    = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-    changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
-  },
-  signcolumn = true
+  autotag = {
+    enable = true,
+  }
 }
 
 require('vscode').setup({})
-
-local hi = vim.api.nvim_set_hl
-hi(0, 'LineNr', {fg='#8a8a8a'})
-hi(0, "CursorLineNr", {bg='#5f5fff', fg='#eeeeee'})
-hi(0, 'SpecialKey', {fg='#585858'})
-hi(0, 'SignColumn', {bg='#000000'})
-hi(0, 'GitSignsAdd', {bg='#008700', fg='#ffffff'})
-hi(0, 'GitSignsChange', {bg='#0000ff', fg='#080808'})
-hi(0, 'GitSignsDelete', {bg='#ff0000', fg='#080808'})
-hi(0, 'GitSignsChangeDelete', {bg='#ff0000', fg='#080808'})
 
 local lsp_progress = {'lsp_progress', timer = { progress_enddelay = 500, spinner = 500, lsp_client_name_enddelay = 500 }, spinner_symbols = { '🌑 ', '🌒 ', '🌓 ', '🌔 ', '🌕 ', '🌖 ', '🌗 ', '🌘 ' }}
 
@@ -158,14 +164,43 @@ require('lualine').setup({
     sections = {
       lualine_a = {'mode'},
       lualine_b = {'branch', 'diff', 'diagnostics'},
-      lualine_c = {'filename'},
+      lualine_c = {{'filename', path = 1}},
       lualine_x = {lsp_progress, 'filetype'},
       lualine_y = {'progress'},
       lualine_z = {'location'}
     },
   })
 
-local map = vim.api.nvim_set_keymap
-map('n', '<c-p>', ":lua require('telescope.builtin').find_files()<cr>", {noremap = true})
-map('n', '<leader>f', ":lua require('telescope.builtin').live_grep()<cr>", {noremap = true})
-map('n', '<leader>ff', ":lua require('telescope.builtin').grep_string()<cr>", {noremap = true})
+require('nvim-test').setup({
+  termOpts = {
+    direction = "float",      -- terminal's direction ("horizontal"|"vertical"|"float")
+    width = 96,               -- terminal's width (for vertical|float)
+    height = 48,              -- terminal's height (for horizontal|float)
+    go_back = false,          -- return focus to original window after executing
+    stopinsert = "auto",      -- exit from insert mode (true|false|"auto")
+    keep_one = true,          -- keep only one terminal for testing
+  },
+})
+
+require('nvim-test.runners.rspec'):setup {
+  file_pattern = "\\v(spec_[^.]+|[^.]+_spec)\\.rb$",   -- determine whether a file is a testfile
+  find_files = { "{name}_spec.rb" },                  -- find testfile for a file
+}
+
+require("formatter").setup {
+  -- Enable or disable logging
+  logging = true,
+  -- Set the log level
+  log_level = vim.log.levels.WARN,
+  filetype = {
+    ruby = {
+      require("formatter.filetypes.ruby").rubocop
+    },
+    typescript = {
+      require("formatter.filetypes.typescript").prettiereslint
+    },
+    typescriptreact = {
+      require("formatter.filetypes.typescriptreact").prettiereslint
+    },
+  }
+}

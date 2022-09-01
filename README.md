@@ -1,4 +1,4 @@
 ### TODO
 
-- [ ] testing tool
+- [ ] git
 - [ ] clean snippets
