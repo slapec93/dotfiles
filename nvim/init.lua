@@ -29,6 +29,7 @@ set.termguicolors = true
 
 require('plugins')
 require('autocmd')
+require('find_spec')
 require('key_mappings')
 require('colors')
 require('git')

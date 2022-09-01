@@ -182,9 +182,13 @@ require('nvim-test').setup({
   },
 })
 
+function open_spec_file()
+  local specfile = vim.fn.expand("%"):gsub("app/", "spec/"):gsub(".rb", "_spec.rb")
+  vim.api.nvim_command("vsplit +edit " .. specfile)
+end
+
 require('nvim-test.runners.rspec'):setup {
   file_pattern = "\\v(spec_[^.]+|[^.]+_spec)\\.rb$",   -- determine whether a file is a testfile
-  find_files = { "{name}_spec.rb" },                  -- find testfile for a file
 }
 
 require("formatter").setup {
