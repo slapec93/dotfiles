@@ -38,3 +38,7 @@ map('n', '<leader>g', ":lua require('neogit').open()<cr>", {noremap = true})
 map('n', '<leader>gb', ":lua require('gitsigns').toggle_current_line_blame()<cr>", {noremap = true})
 
 map('n', '<leader>t', ":lua open_spec_file()<cr>", {noremap = true})
+
+map('n', '<leader>/', ":CommentToggle<cr>", {noremap = true})
+map('v', '<leader>/', ":'<,'>CommentToggle<cr>", {noremap = true})
+

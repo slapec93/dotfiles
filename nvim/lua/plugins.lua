@@ -22,6 +22,8 @@ require('packer').startup(function(use)
 
   use 'klen/nvim-test'
 
+  use "lukas-reineke/lsp-format.nvim"
+
   use 'mhartington/formatter.nvim'
 
   use { 'akinsho/git-conflict.nvim', tag = "*" }
@@ -46,9 +48,18 @@ require('packer').startup(function(use)
     'nvim-telescope/telescope.nvim', tag = '0.1.x',
     requires = { {'nvim-lua/plenary.nvim'} }
   }
+
+  use 'terrortylor/nvim-comment'
 end)
 
 require('telescope').setup{
+  defaults = {
+    mappings = {
+      i = {
+        ["<S-d>"] = require('telescope.actions').delete_buffer
+      }
+    }
+  },
   pickers = {
     find_files = {
       find_command = {
@@ -63,11 +74,14 @@ require('telescope').setup{
   }
 }
 
+require('lsp-format').setup {}
+
 local lspconfig = require('lspconfig')
 
 local servers = { 'solargraph', 'tsserver', 'eslint' }
 
 local on_attach = function(client, bufnr)
+  require "lsp-format".on_attach(client)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -191,7 +205,10 @@ require('nvim-test.runners.rspec'):setup {
   file_pattern = "\\v(spec_[^.]+|[^.]+_spec)\\.rb$",   -- determine whether a file is a testfile
 }
 
-require("formatter").setup {
+require('nvim_comment').setup {
+  create_mappings = false
+}
+--[[require("formatter").setup {
   -- Enable or disable logging
   logging = true,
   -- Set the log level
@@ -207,4 +224,4 @@ require("formatter").setup {
       require("formatter.filetypes.typescriptreact").prettiereslint
     },
   }
-}
+}]]--
