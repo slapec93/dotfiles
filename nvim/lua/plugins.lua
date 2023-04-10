@@ -30,6 +30,8 @@ require('packer').startup(function(use)
 
   use { 'TimUntersberger/neogit', requires = {'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim'} }
 
+  use { 'kyazdani42/nvim-web-devicons' }
+
   use {
     'nvim-lualine/lualine.nvim',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
@@ -50,13 +52,15 @@ require('packer').startup(function(use)
   }
 
   use 'terrortylor/nvim-comment'
+
+  use 'lukas-reineke/indent-blankline.nvim'
 end)
 
 require('telescope').setup{
   defaults = {
     mappings = {
       i = {
-        ["<S-d>"] = require('telescope.actions').delete_buffer
+        ["∂"] = require('telescope.actions').delete_buffer -- Option key + D
       }
     }
   },
@@ -107,6 +111,11 @@ local luasnip = require 'luasnip'
 luasnip.filetype_extend("ruby", { "rspec" })
 require("luasnip.loaders.from_snipmate").lazy_load()
 
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
 local cmp = require('cmp')
 cmp.setup {
   snippet = {
@@ -127,6 +136,8 @@ cmp.setup {
         cmp.select_next_item()
       elseif luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
+      elseif has_words_before() then
+        cmp.complete()
       else
         fallback()
       end
@@ -141,11 +152,19 @@ cmp.setup {
       end
     end, { 'i', 's' }),
   }),
-  sources = {
+  sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
-  },
+  }),
 }
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
 
 require("nvim-autopairs").setup {}
 
@@ -202,12 +221,21 @@ function open_spec_file()
 end
 
 require('nvim-test.runners.rspec'):setup {
+  command = "./bin/rspec",
+  args = { "--format=doc" },
   file_pattern = "\\v(spec_[^.]+|[^.]+_spec)\\.rb$",   -- determine whether a file is a testfile
 }
 
 require('nvim_comment').setup {
   create_mappings = false
 }
+
+require('indent_blankline').setup {
+  show_current_context = true,
+  show_current_context_start = true,
+}
+
+require('git-conflict').setup()
 --[[require("formatter").setup {
   -- Enable or disable logging
   logging = true,

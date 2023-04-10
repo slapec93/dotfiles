@@ -134,7 +134,14 @@ function gp() {
   git push -u origin "$current_branch";
 }
 
-alias gu="git pull"
+function gu() {
+  local current_branch=$(git branch --show-current);
+  git pull origin "$current_branch";
+}
+
+function spec() {
+  bin/rspec --format=doc "$1"
+}
 
 alias tks="tmux kill-session"
 ctags=/opt/homebrew/bin/ctags

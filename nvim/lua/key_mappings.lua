@@ -17,6 +17,7 @@ map('v', '<leader>y', '"+y', {noremap = true})
 map('n', '<leader>y', '"+yy', {noremap = true})
 map('n', '<cr><cr>', 'o<esc>', {noremap = true})
 map('n', '<esc>', ':noh<cr>', {noremap = true})
+map('n', '<leader>bd', ':%bd|e#<cr>', {noremap = true})
 
 -- Line moving and duplication
 map('n', '∆', ':m .+1<cr>==', {noremap = true}) -- Opttion + j
@@ -38,6 +39,7 @@ map('n', '<leader>g', ":lua require('neogit').open()<cr>", {noremap = true})
 map('n', '<leader>gb', ":lua require('gitsigns').toggle_current_line_blame()<cr>", {noremap = true})
 
 map('n', '<leader>t', ":lua open_spec_file()<cr>", {noremap = true})
+map('n', '<leader>i', ":lua open_implementation_file()<cr>", {noremap = true})
 
 map('n', '<leader>/', ":CommentToggle<cr>", {noremap = true})
 map('v', '<leader>/', ":'<,'>CommentToggle<cr>", {noremap = true})
