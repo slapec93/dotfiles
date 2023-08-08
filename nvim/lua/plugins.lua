@@ -207,6 +207,16 @@ require('nvim-treesitter.configs').setup {
   }
 }
 
+function ReadFile(path)
+  local file = assert(io.open(path, "r"))
+  local content = file:read "*a"
+  file:close()
+  return content
+end
+
+local ruby_query = ReadFile('/Users/gergelybekesi/.config/nvim/lua/treesitter/query/ruby/highlights.scm')
+require("vim.treesitter.query").set("ruby", "highlights", ruby_query)
+
 require('vscode').setup({})
 require('vscode').load()
 
