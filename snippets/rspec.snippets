@@ -1,0 +1,109 @@
+snippet spec "spec file skeleton"
+    require '${1:rails}_helper'
+
+    RSpec.describe ${2:ClassName} do
+        ${0:pending('write some tests or delete '+__FILE__)}
+    end
+
+snippet co "context"
+    context '$1' do
+        $0
+    end
+
+snippet de "describe"
+    describe '$1'${2:, :wip} do
+        $0
+    end
+
+snippet id "instance_double"
+    instance_double($0)
+
+snippet she "shared_examples"
+    shared_examples '$1' do
+        $0
+    end
+
+snippet ie "include_examples"
+    include_examples '$0'
+
+snippet ibl "it_behaves_like"
+    it_behaves_like '$0'
+
+snippet isbl "it_should_behave_like"
+    it_should_behave_like '$0'
+
+snippet ma "matching"
+    matching '$0'
+
+snippet it "it ... do"
+    it '$1' do
+      $0
+    end
+
+snippet xit "it ... do"
+    xit '$0' do
+    end
+
+snippet xitl "xit '...'"
+    xit '$0'
+
+snippet itl "it {...}"
+    it { $0 }
+
+snippet itli "it { is_expected.to ... }"
+    it { is_expected.to $0 }
+
+snippet itp "it (pending)"
+    it '$0'
+
+snippet dc "described_class" i
+    described_class
+
+snippet su "subject {}"
+    subject { $0 }
+
+snippet sub "subject(:name) {}"
+    subject(:${1:named}) { $0 }
+
+snippet sum "subject(:method) { smth.method(:some_method) }"
+    subject(:method) { ${1:described_class}.method(:${0:name}) }
+
+snippet let "let(:name) {}"
+    let(:${1:variable}) { $0 }
+
+snippet let! "let!(:name) {}"
+    let!(:${1:variable}) { $0 }
+
+snippet ar "around"
+    around '$1' do
+        $0
+    end
+
+snippet exp "expect(...).to ..."
+    expect($1).to $0
+
+snippet expe "expect {  }.to ..."
+    expect {
+      $1
+    }.to $0
+
+snippet allow "allow(...).to ..."
+    allow($1).to receive($0)
+
+snippet rec "receive"
+    receive($0)
+
+snippet rai "raise_error"
+    raise_error($0)
+
+snippet chf "change{}.from().to()"
+    change { ${1:what?} }.from($2).to($0)
+
+snippet chb "change{}.by()"
+    change{${1:what?}}.by($0)
+
+snippet anyi "any_instance." i
+    any_instance.
+
+snippet aco "and_call_original" i
+    and_call_original

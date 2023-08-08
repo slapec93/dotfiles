@@ -9,9 +9,13 @@ ln -s ~/develop/dotfiles/github-co-author-list ~/.vim/github-co-author-list
 ln -s ~/develop/dotfiles/oh-my-zsh ~/.oh-my-zsh/custom/themes
 ln -s ~/develop/dotfiles/oh-my-zsh ~/.oh-my-zsh/custom/plugins
 
-mkdir -p ~/.config/nvim
-ln -s ~/develop/dotfiles/vim/nvim_init.vim ~/.config/nvim/init.vim
-ln -s ~/develop/dotfiles/vim/coc-settings.json ~/.config/nvim/coc-settings.json
+mkdir -p ~/.config/nvim/ftplugin
+ln -s ~/develop/dotfiles/nvim/ftplugin ~/.config/nvim/ftplugin
+ln -s ~/develop/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
+mkdir -p ~/.config/nvim/lua
+ln -s ~/develop/dotfiles/nvim/lua ~/.config/nvim/lua
+mkdir -p ~/.config/nvim/snippets
+ln -s ~/develop/dotfiles/snippets ~/.config/nvim/snippets
 
-# Resolves python issue
-python3 -m pip install --user --upgrade pynvim
+brew install ripgrep
+brew install fd
