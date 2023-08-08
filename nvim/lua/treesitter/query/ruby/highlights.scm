@@ -90,6 +90,10 @@
   (identifier) @include)
  (#any-of? @include "require" "require_relative" "load"))
 
+(call)
+method: ((identifier) @include_extend
+(#any-of? @include_extend "include" "extend"))
+
 ; Function definitions
 
 (alias (identifier) @function)
