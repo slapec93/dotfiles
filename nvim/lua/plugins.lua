@@ -28,7 +28,7 @@ require('packer').startup(function(use)
 
   use { 'akinsho/git-conflict.nvim', tag = "*" }
 
-  use { 'TimUntersberger/neogit', requires = {'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim'} }
+  use { 'NeogitOrg/neogit', requires = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' } }
 
   use { 'kyazdani42/nvim-web-devicons' }
 
@@ -48,7 +48,7 @@ require('packer').startup(function(use)
 
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.x',
-    requires = { {'nvim-lua/plenary.nvim'} }
+    requires = { { 'nvim-lua/plenary.nvim' } }
   }
 
   use 'terrortylor/nvim-comment'
@@ -56,7 +56,8 @@ require('packer').startup(function(use)
   use 'lukas-reineke/indent-blankline.nvim'
 end)
 
-require('telescope').setup{
+
+require('telescope').setup {
   defaults = {
     mappings = {
       i = {
@@ -82,8 +83,7 @@ require('lsp-format').setup {}
 
 local lspconfig = require('lspconfig')
 
-local servers = { 'solargraph', 'tsserver', 'eslint' }
-
+local servers = { 'ruby_ls', 'sorbet', 'tsserver', 'eslint' }
 local on_attach = function(client, bufnr)
   require "lsp-format".on_attach(client)
   -- Enable completion triggered by <c-x><c-o>
@@ -91,14 +91,28 @@ local on_attach = function(client, bufnr)
 
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  local bufopts = { noremap = true, silent = true, buffer = bufnr }
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.api.nvim_create_autocmd("CursorHold", {
+    buffer = bufnr,
+    callback = function()
+      local opts = {
+        focusable = false,
+        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+        border = 'rounded',
+        source = 'always',
+        prefix = ' ',
+        scope = 'cursor',
+      }
+      vim.diagnostic.open_float(nil, opts)
+    end
+  })
 end
 
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
@@ -106,6 +120,24 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+
+require 'lspconfig'.lua_ls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim' }
+      }
+    }
+  }
+}
+
+require 'lspconfig'.volar.setup {
+  filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
 
 local luasnip = require 'luasnip'
 luasnip.filetype_extend("ruby", { "rspec" })
@@ -123,15 +155,16 @@ cmp.setup {
       luasnip.lsp_expand(args.body)
     end,
   },
+  menu = 'wildmenu',
   mapping = cmp.mapping.preset.insert({
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Tab>'] = cmp.mapping.scroll_docs(-4),
+    ['<S-Tab>'] = cmp.mapping.scroll_docs(4),
     ['<C-.>'] = cmp.mapping.complete(),
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-    ['<Tab>'] = cmp.mapping(function(fallback)
+    ['[['] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       elseif luasnip.expand_or_jumpable() then
@@ -142,7 +175,7 @@ cmp.setup {
         fallback()
       end
     end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
+    [']]'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
       elseif luasnip.jumpable(-1) then
@@ -157,14 +190,6 @@ cmp.setup {
     { name = 'luasnip' },
   }),
 }
-cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-      { name = 'path' }
-    }, {
-      { name = 'cmdline' }
-    })
-  })
 
 require("nvim-autopairs").setup {}
 
@@ -183,47 +208,48 @@ require('nvim-treesitter.configs').setup {
 }
 
 require('vscode').setup({})
+require('vscode').load()
 
-local lsp_progress = {'lsp_progress', timer = { progress_enddelay = 500, spinner = 500, lsp_client_name_enddelay = 500 }, spinner_symbols = { '🌑 ', '🌒 ', '🌓 ', '🌔 ', '🌕 ', '🌖 ', '🌗 ', '🌘 ' }}
+local lsp_progress = {
+  'lsp_progress',
+  timer = { progress_enddelay = 500, spinner = 500, lsp_client_name_enddelay = 500 },
+  spinner_symbols = { '🌑 ', '🌒 ', '🌓 ', '🌔 ', '🌕 ', '🌖 ', '🌗 ', '🌘 ' }
+}
 
 require('lualine').setup({
-    options = {
-      theme = 'vscode',
-      powerline_fonts = true,
-      refresh = {
-        statusline = 500
-      }
-    },
-    sections = {
-      lualine_a = {'mode'},
-      lualine_b = {'branch', 'diff', 'diagnostics'},
-      lualine_c = {{'filename', path = 1}},
-      lualine_x = {lsp_progress, 'filetype'},
-      lualine_y = {'progress'},
-      lualine_z = {'location'}
-    },
-  })
-
-require('nvim-test').setup({
-  termOpts = {
-    direction = "float",      -- terminal's direction ("horizontal"|"vertical"|"float")
-    width = 96,               -- terminal's width (for vertical|float)
-    height = 48,              -- terminal's height (for horizontal|float)
-    go_back = false,          -- return focus to original window after executing
-    stopinsert = "auto",      -- exit from insert mode (true|false|"auto")
-    keep_one = true,          -- keep only one terminal for testing
+  options = {
+    theme = 'vscode',
+    powerline_fonts = true,
+    refresh = {
+      statusline = 500
+    }
+  },
+  sections = {
+    lualine_a = { 'mode' },
+    lualine_b = { 'branch', 'diff', 'diagnostics' },
+    lualine_c = { { 'filename', path = 1 } },
+    lualine_x = { lsp_progress, 'filetype' },
+    lualine_y = { 'progress' },
+    lualine_z = { 'location' }
   },
 })
 
-function open_spec_file()
-  local specfile = vim.fn.expand("%"):gsub("app/", "spec/"):gsub(".rb", "_spec.rb")
-  vim.api.nvim_command("vsplit +edit " .. specfile)
-end
+require('nvim-test').setup({
+
+  termOpts = {
+    direction = "float", -- terminal's direction ("horizontal"|"vertical"|"float")
+    width = 96,          -- terminal's width (for vertical|float)
+    height = 48,         -- terminal's height (for horizontal|float)
+    go_back = false,     -- return focus to original window after executing
+    stopinsert = "auto", -- exit from insert mode (true|false|"auto")
+    keep_one = true,     -- keep only one terminal for testing
+  },
+})
 
 require('nvim-test.runners.rspec'):setup {
   command = "./bin/rspec",
   args = { "--format=doc" },
-  file_pattern = "\\v(spec_[^.]+|[^.]+_spec)\\.rb$",   -- determine whether a file is a testfile
+  file_pattern = "\\v(spec_[^.]+|[^.]+_spec)\\.rb$", -- determine whether a file is a testfile
 }
 
 require('nvim_comment').setup {
@@ -236,20 +262,3 @@ require('indent_blankline').setup {
 }
 
 require('git-conflict').setup()
---[[require("formatter").setup {
-  -- Enable or disable logging
-  logging = true,
-  -- Set the log level
-  log_level = vim.log.levels.WARN,
-  filetype = {
-    ruby = {
-      require("formatter.filetypes.ruby").rubocop
-    },
-    typescript = {
-      require("formatter.filetypes.typescript").prettiereslint
-    },
-    typescriptreact = {
-      require("formatter.filetypes.typescriptreact").prettiereslint
-    },
-  }
-}]]--

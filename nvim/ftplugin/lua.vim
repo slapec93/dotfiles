@@ -1,6 +1,3 @@
 setl nospell
 setl nowrap
-setl tabstop=2
-setl shiftwidth=2
-setl smartindent
-setl expandtab
+set expandtab ts=2 sw=2 ai
