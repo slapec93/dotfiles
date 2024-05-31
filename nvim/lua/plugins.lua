@@ -26,9 +26,11 @@ require('packer').startup(function(use)
 
   use 'mhartington/formatter.nvim'
 
-  use { 'akinsho/git-conflict.nvim', tag = "*" }
+  use { 'akinsho/git-conflict.nvim', tag = "*", config = function()
+    require('git-conflict').setup()
+  end }
 
-  use { 'NeogitOrg/neogit', requires = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' } }
+  use { 'NeogitOrg/neogit', requires = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' }, tag = 'v0.0.1' }
 
   use { 'kyazdani42/nvim-web-devicons' }
 
@@ -54,7 +56,21 @@ require('packer').startup(function(use)
   use 'terrortylor/nvim-comment'
 
   use 'lukas-reineke/indent-blankline.nvim'
+
+  use({
+    "robitx/gp.nvim",
+    config = function()
+      require("gp").setup()
+    end,
+  })
+
+  use {
+    "rockyzhang24/arctic.nvim",
+    requires = { "rktjmp/lush.nvim" }
+  }
 end)
+
+require('neogit').setup {}
 
 
 require('telescope').setup {
@@ -80,10 +96,11 @@ require('telescope').setup {
 }
 
 require('lsp-format').setup {}
+require("gp").setup()
 
 local lspconfig = require('lspconfig')
 
-local servers = { 'ruby_ls', 'sorbet', 'tsserver', 'eslint' }
+local servers = { 'ruby_lsp', 'sorbet', 'tsserver', 'eslint', 'gopls' }
 local on_attach = function(client, bufnr)
   require "lsp-format".on_attach(client)
   -- Enable completion triggered by <c-x><c-o>
@@ -92,7 +109,8 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'gd', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.api.nvim_create_autocmd("CursorHold", {
     buffer = bufnr,
@@ -133,11 +151,11 @@ require 'lspconfig'.lua_ls.setup {
   }
 }
 
-require 'lspconfig'.volar.setup {
-  filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
+-- require 'lspconfig'.volar.setup {
+--   filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+-- }
 
 local luasnip = require 'luasnip'
 luasnip.filetype_extend("ruby", { "rspec" })
@@ -217,8 +235,14 @@ end
 local ruby_query = ReadFile('/Users/gergelybekesi/.config/nvim/lua/treesitter/query/ruby/highlights.scm')
 require("vim.treesitter.query").set("ruby", "highlights", ruby_query)
 
-require('vscode').setup({})
-require('vscode').load()
+local parsers = require "nvim-treesitter.parsers"
+local parser_config = parsers.get_parser_configs()
+parser_config.html.filetype_to_parsername = "json"
+
+-- require('vscode').setup({})
+-- require('vscode').load()
+-- vim.cmd.colorscheme "vscode"
+vim.cmd.colorscheme "arctic"
 
 local lsp_progress = {
   'lsp_progress',
@@ -236,9 +260,9 @@ require('lualine').setup({
   },
   sections = {
     lualine_a = { 'mode' },
-    lualine_b = { 'branch', 'diff', 'diagnostics' },
+    lualine_b = { 'branch' },
     lualine_c = { { 'filename', path = 1 } },
-    lualine_x = { lsp_progress, 'filetype' },
+    lualine_x = { "require'lsp-status'.status()", 'filetype' },
     lualine_y = { 'progress' },
     lualine_z = { 'location' }
   },
@@ -266,9 +290,7 @@ require('nvim_comment').setup {
   create_mappings = false
 }
 
-require('indent_blankline').setup {
-  show_current_context = true,
-  show_current_context_start = true,
+vim.api.nvim_set_hl(0, 'ScopeHighlight', { fg = '#00ff00' })
+require('ibl').setup {
+  scope = { enabled = true, highlight = 'ScopeHighlight', char = '│', show_start = false },
 }
-
-require('git-conflict').setup()

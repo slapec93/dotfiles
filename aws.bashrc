@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 ##
 ## AWS Utils
@@ -143,6 +143,8 @@ function ecsssh() {
       sleep 5
   done
 
+  export AWS_CURRENT_SESSION="aws ecs execute-command --cluster $chosen_cluster_arn --task $task_arn --container $chosen_service --interactive --command '/bin/sh'"
+
   # start SSH session
   echo "" # force new line
   echo "Trying to start the SSH session."
@@ -150,7 +152,7 @@ function ecsssh() {
   echo "In case of an error, copy paste the following command and try again:"
   echo "" # force new line
   echo "" # force new line
-  echo "aws ecs execute-command --cluster $chosen_cluster_arn --task $task_arn --container $chosen_service --interactive --command '/bin/sh'"
+  echo $AWS_CURRENT_SESSION
   echo "" # force new line
 
   # the container will be up until time-current plus container_uptime_in_s
@@ -164,4 +166,14 @@ function ecsssh() {
       && break \
       || sleep 5
   done
+}
+
+function ecs-reconnect() {
+  if [[ -z $AWS_CURRENT_SESSION ]]
+  then
+    echo "No current session found."
+  else
+    echo "Reconnecting to the current session."
+    eval "$AWS_CURRENT_SESSION"
+  fi
 }

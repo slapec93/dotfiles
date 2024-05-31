@@ -54,6 +54,10 @@ function gu() {
   git pull origin "$current_branch";
 }
 
+function gcp() {
+  git cp "$1";
+}
+
 function spec() {
   bin/rspec --format=doc "$1" # --seed $2
 }
@@ -65,7 +69,7 @@ alias ot='ssh -o "ServerAliveInterval=60" -o "ServerAliveCountMax=60" -fNg -L 54
 alias pdb='psql -h 127.0.0.1 -p 5433 -U squake_production_readonly -d squake_production'
 
 declare -A gh_names
-gh_names=( [lud]=swiknaba [grig]=morozRed [chris]=puckzxz [me]='@me' )
+gh_names=( [lud]=swiknaba [grig]=morozRed [chris]=puckzxz [me]='@me' [yury]=erofeevyurysquake )
 function pra() {
   IFS=','
   local assignee_names=''
@@ -81,6 +85,21 @@ function pra() {
   gh pr edit $1 --add-assignee $assignee_names
 }
 
+function prd() {
+  IFS=','
+  local assignee_names=''
+  names=(${(@s:,:)2})
+  for name in "${names[@]}";
+  do
+    if [[ "$assignee_names" = '' ]]; then
+      assignee_names="${gh_names[$name]}"
+    else
+      assignee_names="$assignee_names,${gh_names[$name]}"
+    fi
+  done
+  gh pr edit $1 --remove-assignee $assignee_names
+}
+
 function pram() {
   pra $1 me
 }
@@ -92,4 +111,9 @@ function prall() {
 
 function prl() {
   gh pr list --author "@me"
+}
+
+function prre() {
+  prd $1 lud,grig,chris
+  praall $1
 }
