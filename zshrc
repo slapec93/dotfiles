@@ -46,7 +46,7 @@ function gbr() {
 unalias gp
 function gp() {
   local current_branch=$(git branch --show-current);
-  git push -u origin "$current_branch";
+  git push -u $1 origin "$current_branch";
 }
 
 function gu() {
@@ -69,7 +69,7 @@ alias ot='ssh -o "ServerAliveInterval=60" -o "ServerAliveCountMax=60" -fNg -L 54
 alias pdb='psql -h 127.0.0.1 -p 5433 -U squake_production_readonly -d squake_production'
 
 declare -A gh_names
-gh_names=( [lud]=swiknaba [grig]=morozRed [chris]=puckzxz [me]='@me' [yury]=erofeevyurysquake )
+gh_names=( [lud]=swiknaba [grig]=morozRed [chris]=puckzxz [me]='@me' [yury]=erofeevyurysquake [pavel]=pavshka )
 function pra() {
   IFS=','
   local assignee_names=''
@@ -105,7 +105,7 @@ function pram() {
 }
 
 function prall() {
-  pra $1 lud,grig,chris
+  pra $1 grig,chris,pavel
   gh pr edit $1 --remove-assignee "@me"
 }
 
@@ -114,6 +114,6 @@ function prl() {
 }
 
 function prre() {
-  prd $1 lud,grig,chris
+  prd $1 grig,chris,pavel
   praall $1
 }

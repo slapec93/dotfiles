@@ -19,6 +19,7 @@ map('n', '<leader>y', '"+yy', { noremap = true })
 map('n', '<cr><cr>', 'o<esc>', { noremap = true })
 map('n', '<esc>', ':noh<cr>', { noremap = true })
 map('n', '<leader>bd', ':%bd|e#<cr>', { noremap = true })
+map('n', '<leader>by', ':!yarn build<cr>', { noremap = true })
 -- map('n', 'gd', ':vsplit | lua vim.lsp.buf.definition()<CR>', { noremap = true })
 map('n', 'gd', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", { noremap = true })
 
@@ -46,6 +47,10 @@ map('n', '<leader>i', ":lua open_implementation_file()<cr>", { noremap = true })
 
 map('n', '<leader>/', ":CommentToggle<cr>", { noremap = true })
 map('v', '<leader>/', ":'<,'>CommentToggle<cr>", { noremap = true })
+
+map('n', '<leader>gco', ":GitConflictChooseOurs<cr>", { noremap = true })
+map('n', '<leader>gct', ":GitConflictChooseTheirs<cr>", { noremap = true })
+map('n', '<leader>gcb', ":GitConflictChooseBoth<cr>", { noremap = true })
 
 vim.keymap.set({ "n", "i" }, "<C-g>a", "<cmd>GpRewrite<cr>", { noremap = true })
 vim.keymap.set({ "n" }, "gd", ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>",
