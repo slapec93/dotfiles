@@ -16,6 +16,7 @@ alias oms='overmind start'
 alias omst='overmind stop'
 alias omrs='overmind restart'
 alias omc='overmind connect'
+alias cop='bundle exec rubocop -A'
 
 unalias g
 function g() {
@@ -115,5 +116,5 @@ function prl() {
 
 function prre() {
   prd $1 grig,chris,pavel
-  praall $1
+  prall $1
 }

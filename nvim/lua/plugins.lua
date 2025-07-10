@@ -16,8 +16,6 @@ require('packer').startup(function(use)
 
   use 'windwp/nvim-autopairs'
 
-  use 'lewis6991/gitsigns.nvim'
-
   use 'Mofiqul/vscode.nvim'
 
   use 'klen/nvim-test'
@@ -49,7 +47,7 @@ require('packer').startup(function(use)
   use 'windwp/nvim-ts-autotag'
 
   use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.x',
+    'nvim-telescope/telescope.nvim',
     requires = { { 'nvim-lua/plenary.nvim' } }
   }
 
@@ -68,6 +66,8 @@ require('packer').startup(function(use)
     "rockyzhang24/arctic.nvim",
     requires = { "rktjmp/lush.nvim" }
   }
+
+  use "lewis6991/gitsigns.nvim"
 end)
 
 require('neogit').setup {}
@@ -100,7 +100,7 @@ require("gp").setup()
 
 local lspconfig = require('lspconfig')
 
-local servers = { 'ruby_lsp', 'sorbet', 'tsserver', 'eslint', 'gopls' }
+local servers = { 'ruby_lsp', 'sorbet', 'ts_ls', 'eslint', 'gopls' }
 local on_attach = function(client, bufnr)
   require "lsp-format".on_attach(client)
   -- Enable completion triggered by <c-x><c-o>
@@ -110,7 +110,9 @@ local on_attach = function(client, bufnr)
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
   -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'gd', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", bufopts)
+  vim.keymap.set('n', 'gp', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", bufopts)
+  vim.keymap.set('n', 'gs', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'vsplit' })<cr>", bufopts)
+  vim.keymap.set('n', 'gd', ":lua require('telescope.builtin').lsp_definitions()<cr>", bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.api.nvim_create_autocmd("CursorHold", {
     buffer = bufnr,
