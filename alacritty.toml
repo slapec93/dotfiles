@@ -1,0 +1,30 @@
+[colors]
+        
+# Default colors
+primary.background = '0x101421'
+primary.foreground = '0xfffbf6'
+
+# Normal colors
+normal.black =   '0x2e2e2e'
+normal.red =     '0xeb4129'
+normal.green =   '0xabe047'
+normal.yellow =  '0xf6c744'
+normal.blue =    '0x47a0f3'
+normal.magenta = '0x7b5cb0'
+normal.cyan =    '0x64dbed'
+normal.white =   '0xe5e9f0'
+
+# Bright colors
+bright.black =   '0x565656'
+bright.red =     '0xec5357'
+bright.green =   '0xc0e17d'
+bright.yellow =  '0xf9da6a'
+bright.blue =    '0x49a4f8'
+bright.magenta = '0xa47de9'
+bright.cyan =    '0x99faf2'
+bright.white =   '0xffffff'
+
+[font]
+size = 12.0
+normal.family = 'SauceCodePro Nerd Font'
+                #family: Source Code Pro for Powerline
