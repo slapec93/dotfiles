@@ -28,7 +28,7 @@ require('packer').startup(function(use)
     require('git-conflict').setup()
   end }
 
-  use { 'NeogitOrg/neogit', requires = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' }, tag = 'v0.0.1' }
+  use { 'NeogitOrg/neogit', requires = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' } }
 
   use { 'kyazdani42/nvim-web-devicons' }
 
@@ -55,22 +55,15 @@ require('packer').startup(function(use)
 
   use 'lukas-reineke/indent-blankline.nvim'
 
-  use({
-    "robitx/gp.nvim",
-    config = function()
-      require("gp").setup()
-    end,
-  })
-
   use {
     "rockyzhang24/arctic.nvim",
     requires = { "rktjmp/lush.nvim" }
   }
 
-  use "lewis6991/gitsigns.nvim"
-end)
+  use 'lewis6991/gitsigns.nvim'
 
-require('neogit').setup {}
+  use 'folke/sidekick.nvim'
+end)
 
 
 require('telescope').setup {
@@ -96,9 +89,6 @@ require('telescope').setup {
 }
 
 require('lsp-format').setup {}
-require("gp").setup()
-
-local lspconfig = require('lspconfig')
 
 local servers = { 'ruby_lsp', 'sorbet', 'ts_ls', 'eslint', 'gopls' }
 local on_attach = function(client, bufnr)
@@ -109,7 +99,6 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
-  -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'gp', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", bufopts)
   vim.keymap.set('n', 'gs', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'vsplit' })<cr>", bufopts)
   vim.keymap.set('n', 'gd', ":lua require('telescope.builtin').lsp_definitions()<cr>", bufopts)
@@ -135,13 +124,13 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
+  vim.lsp.config(lsp, {
     on_attach = on_attach,
     capabilities = capabilities,
-  }
+  })
 end
 
-require 'lspconfig'.lua_ls.setup {
+vim.lsp.config('lua_ls', {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
@@ -151,13 +140,7 @@ require 'lspconfig'.lua_ls.setup {
       }
     }
   }
-}
-
--- require 'lspconfig'.volar.setup {
---   filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
---   on_attach = on_attach,
---   capabilities = capabilities,
--- }
+})
 
 local luasnip = require 'luasnip'
 luasnip.filetype_extend("ruby", { "rspec" })
@@ -241,16 +224,7 @@ local parsers = require "nvim-treesitter.parsers"
 local parser_config = parsers.get_parser_configs()
 parser_config.html.filetype_to_parsername = "json"
 
--- require('vscode').setup({})
--- require('vscode').load()
--- vim.cmd.colorscheme "vscode"
 vim.cmd.colorscheme "arctic"
-
-local lsp_progress = {
-  'lsp_progress',
-  timer = { progress_enddelay = 500, spinner = 500, lsp_client_name_enddelay = 500 },
-  spinner_symbols = { '🌑 ', '🌒 ', '🌓 ', '🌔 ', '🌕 ', '🌖 ', '🌗 ', '🌘 ' }
-}
 
 require('lualine').setup({
   options = {

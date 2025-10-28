@@ -9,6 +9,7 @@ plugins=(git zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.zshenv
+source $HOME/.zshsecrets
 source $HOME/aws.bashrc
 
 alias om='overmind'
@@ -118,3 +119,6 @@ function prre() {
   prd $1 grig,chris,pavel
   prall $1
 }
+
+# opencode
+export PATH=/Users/gergelybekesi/.opencode/bin:$PATH
