@@ -28,7 +28,7 @@ require('packer').startup(function(use)
     require('git-conflict').setup()
   end }
 
-  use { 'NeogitOrg/neogit', requires = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' } }
+  use { 'NeogitOrg/neogit', requires = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim', 'nvim-telescope/telescope.nvim' } }
 
   use { 'kyazdani42/nvim-web-devicons' }
 
@@ -47,8 +47,7 @@ require('packer').startup(function(use)
   use 'windwp/nvim-ts-autotag'
 
   use {
-    'nvim-telescope/telescope.nvim',
-    requires = { { 'nvim-lua/plenary.nvim' } }
+    'nvim-telescope/telescope.nvim', requires = { { 'nvim-lua/plenary.nvim' } }
   }
 
   use 'terrortylor/nvim-comment'
@@ -62,9 +61,18 @@ require('packer').startup(function(use)
 
   use 'lewis6991/gitsigns.nvim'
 
-  use 'folke/sidekick.nvim'
+  use 'folke/sidekick.nvim'    -- AI integration
+
+  use 'nvim-pack/nvim-spectre' -- Find and replace
 end)
 
+require('sidekick').setup({})
+local neogit = require("neogit")
+neogit.setup {
+  commit_editor = {
+    staged_diff_split_kind = 'vsplit_left',
+  },
+}
 
 require('telescope').setup {
   defaults = {
@@ -90,7 +98,9 @@ require('telescope').setup {
 
 require('lsp-format').setup {}
 
-local servers = { 'ruby_lsp', 'sorbet', 'ts_ls', 'eslint', 'gopls' }
+local lspconfig = require('lspconfig')
+
+local servers = { 'ruby_lsp', 'sorbet', 'ts_ls', 'gopls', 'copilot' }
 local on_attach = function(client, bufnr)
   require "lsp-format".on_attach(client)
   -- Enable completion triggered by <c-x><c-o>
@@ -99,9 +109,9 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
-  vim.keymap.set('n', 'gp', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", bufopts)
-  vim.keymap.set('n', 'gs', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'vsplit' })<cr>", bufopts)
-  vim.keymap.set('n', 'gd', ":lua require('telescope.builtin').lsp_definitions()<cr>", bufopts)
+  -- vim.keymap.set('n', 'gp', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", bufopts)
+  -- vim.keymap.set('n', 'gs', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'vsplit' })<cr>", bufopts)
+  -- vim.keymap.set('n', 'gd', ":lua require('telescope.builtin').lsp_definitions()<cr>", bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.api.nvim_create_autocmd("CursorHold", {
     buffer = bufnr,
@@ -124,13 +134,15 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 for _, lsp in ipairs(servers) do
-  vim.lsp.config(lsp, {
+  -- vim.lsp.config(lsp, {
+  lspconfig[lsp].setup {
     on_attach = on_attach,
     capabilities = capabilities,
-  })
+  }
 end
 
-vim.lsp.config('lua_ls', {
+-- vim.lsp.config('lua_ls', {
+require 'lspconfig'.lua_ls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
@@ -140,7 +152,7 @@ vim.lsp.config('lua_ls', {
       }
     }
   }
-})
+}
 
 local luasnip = require 'luasnip'
 luasnip.filetype_extend("ruby", { "rspec" })

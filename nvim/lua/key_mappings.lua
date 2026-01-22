@@ -55,3 +55,5 @@ map('n', '<leader>gcb', ":GitConflictChooseBoth<cr>", { noremap = true })
 
 vim.keymap.set({ "n" }, "gd", ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>",
   { noremap = true })
+
+map('n', '<leader>x', '<cmd>lua require("spectre").toggle()<CR>', {})

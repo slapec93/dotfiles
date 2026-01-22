@@ -11,4 +11,5 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export TMUX_PLUGIN_MANAGER_PATH=~/.tmux/plugins/tpm
+export PNPM_HOME="/$HOME/.pnpm"
 eval "$(rbenv init -)"

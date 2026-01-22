@@ -122,3 +122,11 @@ function prre() {
 
 # opencode
 export PATH=/Users/gergelybekesi/.opencode/bin:$PATH
+
+# pnpm
+export PNPM_HOME="/Users/gergelybekesi/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
