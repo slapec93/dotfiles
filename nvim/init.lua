@@ -11,7 +11,6 @@ set.mouse = 'a'
 set.list = true
 set.listchars = 'tab:>-,trail:·,nbsp:·,space:·'
 set.autoread = true
-set.re = 1
 set.updatetime = 100
 set.autowrite = true
 

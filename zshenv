@@ -7,6 +7,7 @@ export PATH="/opt/homebrew/opt/poppler:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="/Users/gergelybekesi/.nvm/versions/node/v20.12.2/bin/:$PATH"
 export PATH="$PATH:/Library/TeX/texbin"
+export PATH="$PATH:$HOME/go/bin"
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8

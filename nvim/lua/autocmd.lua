@@ -8,7 +8,7 @@ autocmd("BufRead", { pattern = "*.rbi", command = ":set ft=ruby" })
 
 autocmd("BufWritePost", { pattern = "*.rb", command = "FormatWrite" })
 autocmd("BufWritePost", { pattern = "*.tsx,*.ts,*.jsx,*.js", command = "FormatWrite" })
-autocmd("BufWritePre", { pattern = "*.tsx,*.ts,*.jsx,*.js", command = "EslintFixAll" })
+autocmd("BufWritePre", { pattern = "*.tsx,*.ts,*.jsx,*.js", command = "LspEslintFixAll" })
 -- vim.cmd [[autocmd BufWritePre * Format]]
 -- vim.cmd [[autocmd BufWritePost * FormatWrite]]
 -- vim.cmd [[autocmd BufWritePre *.tsx,*.ts,*.jsx,*.js EslintFixAll]]

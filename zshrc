@@ -13,6 +13,7 @@ plugins=(git zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
 source $HOME/.zshenv
 source $HOME/.zshsecrets
+source $HOME/.swarm.bashrc
 # source $HOME/aws.bashrc
 
 alias om='overmind'
