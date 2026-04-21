@@ -52,6 +52,8 @@ map('v', '<leader>/', ":'<,'>CommentToggle<cr>", { noremap = true })
 map('n', '<leader>gco', ":GitConflictChooseOurs<cr>", { noremap = true })
 map('n', '<leader>gct', ":GitConflictChooseTheirs<cr>", { noremap = true })
 map('n', '<leader>gcb', ":GitConflictChooseBoth<cr>", { noremap = true })
+map('n', '<leader>,', ":ClaudeCode<cr>", { noremap = true })
+map('n', '<leader>:', ":ClaudeCodeContinue<cr>", { noremap = true })
 
 vim.keymap.set({ "n" }, "gd", ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>",
   { noremap = true })

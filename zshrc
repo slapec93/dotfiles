@@ -127,6 +127,9 @@ function prre() {
 # opencode
 export PATH=/Users/gergelybekesi/.opencode/bin:$PATH
 
+# python
+export PATH="/opt/homebrew/opt/python@3.14/libexec/bin:$PATH"
+
 # pnpm
 export PNPM_HOME="/Users/gergelybekesi/Library/pnpm"
 case ":$PATH:" in
@@ -135,3 +138,10 @@ case ":$PATH:" in
 esac
 # pnpm end
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/gergelybekesi/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/gergelybekesi/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/gergelybekesi/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/gergelybekesi/Downloads/google-cloud-sdk/completion.zsh.inc'; fi

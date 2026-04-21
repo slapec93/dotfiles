@@ -102,6 +102,43 @@ require('telescope').setup {
 }
 
 require('lsp-format').setup {}
+require("claude-code").setup({
+  window = {
+    position = "vertical"
+  },
+})
+
+local lspconfig = require('lspconfig')
+
+local servers = { 'ruby_lsp', 'sorbet', 'ts_ls', 'gopls', 'copilot', 'rust_analyzer' }
+local on_attach = function(client, bufnr)
+  require "lsp-format".on_attach(client)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  local bufopts = { noremap = true, silent = true, buffer = bufnr }
+  -- vim.keymap.set('n', 'gp', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", bufopts)
+  -- vim.keymap.set('n', 'gs', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'vsplit' })<cr>", bufopts)
+  -- vim.keymap.set('n', 'gd', ":lua require('telescope.builtin').lsp_definitions()<cr>", bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.api.nvim_create_autocmd("CursorHold", {
+    buffer = bufnr,
+    callback = function()
+      local opts = {
+        focusable = false,
+        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+        border = 'rounded',
+        source = 'always',
+        prefix = ' ',
+        scope = 'cursor',
+      }
+      vim.diagnostic.open_float(nil, opts)
+    end
+  })
+end
+
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)

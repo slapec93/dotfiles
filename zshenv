@@ -4,9 +4,12 @@ export PATH="$PATH:/Users/gbekesi/Library/Python/3.8/bin"
 export PATH="$PATH:/Users/gbekesi/.local/share/gem/ruby"
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export PATH="/opt/homebrew/opt/poppler:$PATH"
+export PATH="/opt/homebrew/opt/python@3.14/libexec/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="/Users/gergelybekesi/.nvm/versions/node/v20.12.2/bin/:$PATH"
 export PATH="$PATH:/Library/TeX/texbin"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/go/bin"
 
 export LC_ALL=en_US.UTF-8
@@ -14,4 +17,6 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export TMUX_PLUGIN_MANAGER_PATH=~/.tmux/plugins/tpm
 export PNPM_HOME="/$HOME/.pnpm"
+export CLOUDSDK_PYTHON="/opt/homebrew/opt/python@3.14/libexec/bin/python"
 eval "$(rbenv init -)"
+. "$HOME/.cargo/env"
