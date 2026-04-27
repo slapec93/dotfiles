@@ -37,7 +37,14 @@ require('packer').startup(function(use)
 
   use {
     'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate'
+    run = ':TSUpdate',
+    config = function()
+      require('nvim-treesitter').setup {
+        ensure_installed = { "all" },
+        auto_install = true,
+        highlight = { enable = true },
+      }
+    end
   }
 
   use 'RRethy/nvim-treesitter-endwise'
@@ -65,15 +72,27 @@ require('packer').startup(function(use)
       'nvim-lua/plenary.nvim', -- Required for git operations
     },
     config = function()
-      require('claude-code').setup({})
+      require('claude-code').setup({
+        window = {
+          position = "vertical"
+        },
+      })
     end
   }
 
   use 'nvim-pack/nvim-spectre' -- Find and replace
+
+  -- Debugging
+  use 'mfussenegger/nvim-dap'
+  use 'rcarriga/nvim-dap-ui'
+  use 'nvim-neotest/nvim-nio'
+  use 'mxsdev/nvim-dap-vscode-js'
 end)
 
 local neogit = require("neogit")
 neogit.setup {
+  disable_builtin_notifications = true,
+  process_spinner = false,
   commit_editor = {
     staged_diff_split_kind = 'vsplit_left',
   },
@@ -102,43 +121,6 @@ require('telescope').setup {
 }
 
 require('lsp-format').setup {}
-require("claude-code").setup({
-  window = {
-    position = "vertical"
-  },
-})
-
-local lspconfig = require('lspconfig')
-
-local servers = { 'ruby_lsp', 'sorbet', 'ts_ls', 'gopls', 'copilot', 'rust_analyzer' }
-local on_attach = function(client, bufnr)
-  require "lsp-format".on_attach(client)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap = true, silent = true, buffer = bufnr }
-  -- vim.keymap.set('n', 'gp', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", bufopts)
-  -- vim.keymap.set('n', 'gs', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'vsplit' })<cr>", bufopts)
-  -- vim.keymap.set('n', 'gd', ":lua require('telescope.builtin').lsp_definitions()<cr>", bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.api.nvim_create_autocmd("CursorHold", {
-    buffer = bufnr,
-    callback = function()
-      local opts = {
-        focusable = false,
-        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-        border = 'rounded',
-        source = 'always',
-        prefix = ' ',
-        scope = 'cursor',
-      }
-      vim.diagnostic.open_float(nil, opts)
-    end
-  })
-end
-
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -202,7 +184,7 @@ luasnip.filetype_extend("ruby", { "rspec" })
 require("luasnip.loaders.from_snipmate").lazy_load()
 
 local has_words_before = function()
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local line, col = table.unpack(vim.api.nvim_win_get_cursor(0))
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
@@ -251,11 +233,6 @@ cmp.setup {
 
 require("nvim-autopairs").setup {}
 
-require('nvim-treesitter').setup {
-  ensure_installed = { "all" },
-  auto_install = true,
-  highlight = { enable = true },
-}
 
 function ReadFile(path)
   local file = assert(io.open(path, "r"))
@@ -263,12 +240,6 @@ function ReadFile(path)
   file:close()
   return content
 end
-
-require("claude-code").setup({
-  window = {
-    position = "vertical"
-  },
-})
 
 -- local ruby_query = ReadFile(os.getenv("HOME") .. '/.config/nvim/lua/treesitter/query/ruby/highlights.scm')
 -- require("vim.treesitter.query").set("ruby", "highlights", ruby_query)
@@ -296,24 +267,6 @@ require('lualine').setup({
     lualine_z = { 'location' }
   },
 })
-
--- require('nvim-test').setup({
--- 
---   termOpts = {
---     direction = "float", -- terminal's direction ("horizontal"|"vertical"|"float")
---     width = 96,          -- terminal's width (for vertical|float)
---     height = 48,         -- terminal's height (for horizontal|float)
---     go_back = false,     -- return focus to original window after executing
---     stopinsert = "auto", -- exit from insert mode (true|false|"auto")
---     keep_one = true,     -- keep only one terminal for testing
---   },
--- })
--- 
--- require('nvim-test.runners.rspec'):setup {
---   command = "./bin/rspec",
---   args = { "--format=doc" },
---   file_pattern = "\\v(spec_[^.]+|[^.]+_spec)\\.rb$", -- determine whether a file is a testfile
--- }
 
 require('nvim_comment').setup {
   create_mappings = false

@@ -25,10 +25,11 @@ map('n', '<leader>yf', ':!yarn run prettier --write %<cr>', { noremap = true })
 map('n', 'gd', ":lua require('telescope.builtin').lsp_definitions({ jump_type = 'never' })<cr>", { noremap = true })
 
 -- Line moving and duplication
-map('n', '∆', ':m .+1<cr>==', { noremap = true }) -- Opttion + j
-map('n', '˚', ':m .-2<cr>==', { noremap = true }) -- Opttion + k
-map('n', 'Ô', ':t . <cr>==', { noremap = true }) -- Shift + Opttion + j
+map('n', '∆', ':m .+1<cr>==', { noremap = true }) -- Option + j
+map('n', '˚', ':m .-2<cr>==', { noremap = true }) -- Option + k
+map('n', 'Ô', ':t . <cr>==', { noremap = true }) -- Shift + Option + j
 
+-- File searching and navigation
 map('n', '<c-p>', ":lua require('telescope.builtin').find_files()<CR>", { noremap = true })
 map('n', '<leader>f', ":lua require('telescope.builtin').live_grep()<cr>", { noremap = true })
 map('n', '<leader>ff', ":lua require('telescope.builtin').grep_string()<cr>", { noremap = true })
@@ -36,9 +37,17 @@ map('n', '<leader>n', ":lua require('telescope.builtin').resume()<cr>", { norema
 map('n', '<leader>d', ":lua require('telescope.builtin').diagnostics()<cr>", { noremap = true })
 map('n', '<leader>b', ":lua require('telescope.builtin').buffers()<cr>", { noremap = true })
 
-map('n', '<leader>r', ":TestNearest<cr>", { noremap = true })
-map('n', '<leader>rf', ":TestFile<cr>", { noremap = true })
-map('n', '<leader>rl', ":TestLast<cr>", { noremap = true })
+-- Testing
+map('n', '<leader>r', ":lua require('test_runner').run_nearest()<cr>", { noremap = true })
+map('n', '<leader>rf', ":lua require('test_runner').run_file()<cr>", { noremap = true })
+map('n', '<leader>rl', ":lua require('test_runner').run_all()<cr>", { noremap = true })
+
+-- Debugging
+map('n', '<leader>db', ":lua require('dap').toggle_breakpoint()<cr>", { noremap = true })
+map('n', '<leader>dc', ":lua require('dap').continue()<cr>", { noremap = true })
+map('n', '<leader>di', ":lua require('dap').step_into()<cr>", { noremap = true })
+map('n', '<leader>do', ":lua require('dap').step_over()<cr>", { noremap = true })
+map('n', '<leader>dq', ":lua require('dap').terminate()<cr>", { noremap = true })
 
 map('n', '<leader>g', ":lua require('neogit').open()<cr>", { noremap = true })
 map('n', '<leader>gb', ":lua require('gitsigns').toggle_current_line_blame()<cr>", { noremap = true })
