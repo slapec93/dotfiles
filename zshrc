@@ -23,6 +23,10 @@ alias omrs='overmind restart'
 alias omc='overmind connect'
 alias cop='bundle exec rubocop -A'
 
+function tnew() {
+  tmux new-session -A -s "$1"
+}
+
 unalias g
 function g() {
   local default_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@');
@@ -60,6 +64,11 @@ function gu() {
   git pull origin "$current_branch";
 }
 
+unalias gm
+function gm() {
+  git checkout master;
+}
+
 function gcp() {
   git cp "$1";
 }
@@ -71,8 +80,8 @@ function spec() {
 alias tks="tmux kill-session"
 ctags=/opt/homebrew/bin/ctags
 
-alias ot='ssh -o "ServerAliveInterval=60" -o "ServerAliveCountMax=60" -fNg -L 5433:squake-production.cg16txouae0e.eu-central-1.rds.amazonaws.com:5432 root@bastion.squake.earth'
-alias pdb='psql -h 127.0.0.1 -p 5433 -U squake_production_readonly -d squake_production'
+# alias ot='ssh -o "ServerAliveInterval=60" -o "ServerAliveCountMax=60" -fNg -L 5433:squake-production.cg16txouae0e.eu-central-1.rds.amazonaws.com:5432 root@bastion.squake.earth'
+# alias pdb='psql -h 127.0.0.1 -p 5433 -U squake_production_readonly -d squake_production'
 
 declare -A gh_names
 gh_names=( [lud]=swiknaba [grig]=morozRed [chris]=puckzxz [me]='@me' [yury]=erofeevyurysquake [pavel]=pavshka )
@@ -145,3 +154,11 @@ if [ -f '/Users/gergelybekesi/Downloads/google-cloud-sdk/path.zsh.inc' ]; then .
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/gergelybekesi/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/gergelybekesi/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+# bun completions
+[ -s "/Users/gergelyswarm/.bun/_bun" ] && source "/Users/gergelyswarm/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+. "/Users/gergelyswarm/.deno/env"
